@@ -85,7 +85,7 @@ export function DetailsStep({
   };
 
   return (
-    <div className="mx-auto max-w-5xl px-6 pt-6 pb-40 sm:px-16">
+    <div className="mx-auto max-w-7xl px-6 pt-6 pb-40 sm:px-10">
       <div className="text-center">
         <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
           Show us your vibe.
