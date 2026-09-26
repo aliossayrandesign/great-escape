@@ -102,8 +102,8 @@ export function PaymentStep({
             </div>
           </div>
 
-          <div className="mt-6 flex items-center justify-between">
-            <span className="text-xs text-dark-400">
+          <div className="mt-6 flex flex-col gap-4">
+            <span className="text-center text-xs text-dark-400">
               Secured by Stripe — placeholder form for now
             </span>
             <PillButton
@@ -111,7 +111,7 @@ export function PaymentStep({
               size="xl"
               variant="paper"
               disabled={submitting}
-              className="h-14 whitespace-nowrap"
+              className="h-14 w-full whitespace-nowrap"
             >
               {submitting ? "Processing…" : "Complete →"}
             </PillButton>
