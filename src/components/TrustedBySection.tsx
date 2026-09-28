@@ -11,7 +11,7 @@ const BRANDS = [
   { name: "GoPuff", src: "/images/logos/gopuff.svg" },
   { name: "BevMo", src: "/images/logos/bevmo.svg" },
   { name: "Halo Top", src: "/images/logos/halotop.svg", className: "h-4 sm:h-6 md:h-7 lg:h-9" },
-  { name: "Sunrun", src: "/images/logos/sunrun.svg" },
+  { name: "Sunrun", src: "/images/logos/sunrun.png" },
 ];
 
 export function TrustedBySection() {
