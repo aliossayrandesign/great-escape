@@ -11,9 +11,9 @@ const PRODUCT_LABEL: Record<ProductType, string> = {
 };
 
 const PRODUCT_PRICE: Record<ProductType, number> = {
-  website: 1200,
-  app: 1800,
-  deck: 800,
+  website: 2500,
+  app: 4500,
+  deck: 1000,
 };
 
 export function PaymentStep({

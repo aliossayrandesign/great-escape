@@ -8,19 +8,19 @@ const PLANS = [
   {
     id: "website",
     title: "Website",
-    price: 1200,
+    price: 2500,
     description: "A full marketing site — home, pages, and everything in between.",
   },
   {
     id: "app",
     title: "App",
-    price: 1800,
+    price: 4500,
     description: "A product interface — screens, flows, and states.",
   },
   {
     id: "deck",
     title: "Pitch Deck",
-    price: 800,
+    price: 1000,
     description: "A deck built to raise, sell, or pitch.",
   },
 ];

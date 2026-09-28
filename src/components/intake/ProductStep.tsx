@@ -18,7 +18,7 @@ const PRODUCTS: {
   {
     id: "website",
     title: "Website",
-    price: 1200,
+    price: 2500,
     description: "A full marketing site — home, pages, and everything in between.",
     included: [
       "Home + up to 5 core pages",
@@ -30,7 +30,7 @@ const PRODUCTS: {
   {
     id: "app",
     title: "App",
-    price: 1800,
+    price: 4500,
     description: "A product interface — screens, flows, and states.",
     included: [
       "Onboarding + core product flows",
@@ -42,7 +42,7 @@ const PRODUCTS: {
   {
     id: "deck",
     title: "Pitch Deck",
-    price: 800,
+    price: 1000,
     description: "A deck built to raise, sell, or pitch.",
     included: [
       "12–15 slide narrative deck",
