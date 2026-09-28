@@ -25,7 +25,7 @@ export function TrustedBySection() {
         className="mx-auto max-w-xs text-center font-mono text-[10px] leading-relaxed tracking-[0.08em] text-coral uppercase sm:mx-0 sm:max-w-none sm:whitespace-nowrap sm:text-[10px] sm:tracking-[0.12em] xl:text-xs xl:tracking-[0.2em]"
       >
         + Every project personally refined by designers who&apos;ve created
-        work for these brands +
+        work for +
       </motion.p>
 
       <motion.div
