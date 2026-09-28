@@ -24,8 +24,8 @@ export function TrustedBySection() {
         transition={{ duration: 0.5 }}
         className="mx-auto max-w-xs text-center font-mono text-[10px] leading-relaxed tracking-[0.08em] text-coral uppercase sm:mx-0 sm:max-w-none sm:whitespace-nowrap sm:text-[10px] sm:tracking-[0.12em] xl:text-xs xl:tracking-[0.2em]"
       >
-        + I&apos;ve built it: every project personally refined by designers
-        who&apos;ve created work for these brands +
+        + Every project personally refined by designers who&apos;ve created
+        work for these brands +
       </motion.p>
 
       <motion.div
