@@ -3,27 +3,25 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { PRODUCT_PRICE } from "@/lib/products";
 
 const PLANS = [
   {
     id: "website",
     title: "Website",
-    price: 2500,
     description: "A full marketing site — home, pages, and everything in between.",
   },
   {
     id: "app",
     title: "App",
-    price: 4500,
     description: "A product interface — screens, flows, and states.",
   },
   {
     id: "deck",
     title: "Pitch Deck",
-    price: 1000,
     description: "A deck built to raise, sell, or pitch.",
   },
-];
+] as const;
 
 const INCLUDED = [
   "First look in 1 week",
@@ -79,7 +77,7 @@ export function PricingSection() {
               {plan.description}
             </p>
             <div className="mt-6 text-5xl font-semibold tracking-tight">
-              ${plan.price.toLocaleString()}
+              ${PRODUCT_PRICE[plan.id].toLocaleString()}
             </div>
             <div className="mt-8 flex-1 space-y-3 border-t border-paper/10 pt-7">
               {INCLUDED.map((item) => (

@@ -4,13 +4,13 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { PillButton } from "../ui/PillButton";
 import { GlowFog } from "../ui/GlowFog";
+import { PRODUCT_PRICE, type ProductType } from "@/lib/products";
 
-export type ProductType = "website" | "app" | "deck";
+export type { ProductType };
 
 const PRODUCTS: {
   id: ProductType;
   title: string;
-  price: number;
   description: string;
   included: string[];
   image: string;
@@ -18,7 +18,6 @@ const PRODUCTS: {
   {
     id: "website",
     title: "Website",
-    price: 2500,
     description: "A full marketing site — home, pages, and everything in between.",
     included: [
       "Home + up to 5 core pages",
@@ -30,7 +29,6 @@ const PRODUCTS: {
   {
     id: "app",
     title: "App",
-    price: 4500,
     description: "A product interface — screens, flows, and states.",
     included: [
       "Onboarding + core product flows",
@@ -42,7 +40,6 @@ const PRODUCTS: {
   {
     id: "deck",
     title: "Pitch Deck",
-    price: 1000,
     description: "A deck built to raise, sell, or pitch.",
     included: [
       "12–15 slide narrative deck",
@@ -107,7 +104,7 @@ export function ProductStep({
                       {product.title}
                     </h3>
                     <span className="shrink-0 rounded-full bg-dark-900/80 px-3 py-1 font-mono text-xs tracking-[0.1em] text-coral">
-                      ${product.price.toLocaleString()}
+                      ${PRODUCT_PRICE[product.id].toLocaleString()}
                     </span>
                   </div>
                   <p className="mt-3 text-pretty text-sm leading-relaxed text-paper/60">
