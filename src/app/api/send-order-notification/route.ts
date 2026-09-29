@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
-import { resend, ORDER_NOTIFICATION_TO } from "@/lib/resend";
+import { getResend, ORDER_NOTIFICATION_TO } from "@/lib/resend";
 import { PRODUCT_LABEL, PRODUCT_PRICE, type ProductType } from "@/lib/products";
 
 type OrderPayload = {
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
     </div>
   `;
 
-  const { error: sendError } = await resend.emails.send({
+  const { error: sendError } = await getResend().emails.send({
     from: "great esc. <onboarding@resend.dev>",
     to: ORDER_NOTIFICATION_TO,
     subject: `New order: ${PRODUCT_LABEL[product]} — ${details.name}`,
