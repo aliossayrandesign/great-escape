@@ -10,6 +10,13 @@ import {
 } from "framer-motion";
 import { GlowFog } from "./ui/GlowFog";
 
+const TOOLS = {
+  framer: { label: "Framer", icon: "/images/platforms/framer.svg", w: 179, h: 269 },
+  code: { label: "Custom code", icon: "/images/platforms/custom-code.svg", w: 24, h: 24 },
+  figma: { label: "Figma", icon: "/images/platforms/figma.svg", w: 24, h: 24 },
+  pdf: { label: "PDF", icon: "/images/platforms/pdf.svg", w: 24, h: 24 },
+};
+
 const PRODUCTS = [
   {
     id: "website",
@@ -26,6 +33,7 @@ const PRODUCTS = [
       "Launch-ready structure, SEO built in",
     ],
     image: "/images/card-website.png",
+    tools: [TOOLS.framer, TOOLS.code],
   },
   {
     id: "app",
@@ -42,6 +50,7 @@ const PRODUCTS = [
       "Light & dark variants",
     ],
     image: "/images/card-app.png",
+    tools: [TOOLS.figma, TOOLS.code],
   },
   {
     id: "deck",
@@ -57,6 +66,7 @@ const PRODUCTS = [
       "Editable source file, yours to keep",
     ],
     image: "/images/card-deck.png",
+    tools: [TOOLS.figma, TOOLS.pdf],
   },
 ];
 
@@ -88,6 +98,24 @@ function ProductPanel({ product }: { product: Product }) {
           {product.tagline}
         </p>
         <p className="mt-4 max-w-md text-pretty text-paper/60">{product.description}</p>
+
+        <div className="mt-6 flex items-center gap-6">
+          {product.tools.map((tool) => (
+            <div key={tool.label} className="flex items-center gap-2">
+              <Image
+                src={tool.icon}
+                alt={tool.label}
+                width={tool.w}
+                height={tool.h}
+                className="h-5 w-auto opacity-60"
+              />
+              <span className="font-mono text-xs tracking-[0.1em] text-paper/50 uppercase">
+                {tool.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
         <ul className="mt-8 space-y-3 border-t border-paper/10 pt-6">
           {product.included.map((item) => (
             <li
