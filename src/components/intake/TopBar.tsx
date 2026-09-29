@@ -1,14 +1,14 @@
 "use client";
 
-const STEP_LABELS = ["PRODUCT", "DETAILS", "PAYMENT"];
-
 export function TopBar({
   step,
-  totalSteps = 3,
+  totalSteps,
+  stepLabel,
   onBack,
 }: {
   step: number;
-  totalSteps?: number;
+  totalSteps: number;
+  stepLabel: string;
   onBack?: () => void;
 }) {
   return (
@@ -34,7 +34,7 @@ export function TopBar({
           />
         ))}
         <span className="ml-2 font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
-          Step {step} of {totalSteps} — {STEP_LABELS[step - 1]}
+          Step {step} of {totalSteps} — {stepLabel}
         </span>
       </div>
 

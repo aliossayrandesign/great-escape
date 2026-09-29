@@ -6,11 +6,24 @@ import { AnimatePresence, motion } from "framer-motion";
 import { IntakeNav } from "@/components/intake/IntakeNav";
 import { TopBar } from "@/components/intake/TopBar";
 import { ProductStep, type ProductType } from "@/components/intake/ProductStep";
+import {
+  PlatformStep,
+  type Platform,
+  type SiteType,
+} from "@/components/intake/PlatformStep";
 import { DetailsStep, type DetailsData } from "@/components/intake/DetailsStep";
 import { PaymentStep } from "@/components/intake/PaymentStep";
 import { ConfirmationStep } from "@/components/intake/ConfirmationStep";
 
-type Step = 1 | 2 | 3 | 4;
+type StepName = "product" | "platform" | "details" | "payment" | "confirmation";
+
+const STEP_LABELS: Record<StepName, string> = {
+  product: "PRODUCT",
+  platform: "PLATFORM",
+  details: "DETAILS",
+  payment: "PAYMENT",
+  confirmation: "",
+};
 
 const EMPTY_DETAILS: DetailsData = {
   name: "",
@@ -39,53 +52,85 @@ function StartPageInner() {
     ? (preselected as ProductType)
     : null;
 
-  const [step, setStep] = useState<Step>(initialProduct ? 2 : 1);
   const [product, setProduct] = useState<ProductType | null>(initialProduct);
+  const [siteType, setSiteType] = useState<SiteType | null>(null);
+  const [platform, setPlatform] = useState<Platform | null>(null);
   const [details, setDetails] = useState<DetailsData>(EMPTY_DETAILS);
   const [detailsDirty, setDetailsDirty] = useState(false);
   const dirty = product !== null || detailsDirty;
 
+  const [stepName, setStepName] = useState<StepName>(
+    initialProduct === "website"
+      ? "platform"
+      : initialProduct
+        ? "details"
+        : "product"
+  );
+
+  const steps: StepName[] =
+    product === "website"
+      ? ["product", "platform", "details", "payment"]
+      : ["product", "details", "payment"];
+  const stepIndex = steps.indexOf(stepName);
+  const goTo = (name: StepName) => setStepName(name);
+  const goBack = () => {
+    if (stepIndex > 0) goTo(steps[stepIndex - 1]);
+  };
+
   return (
     <main className="min-h-screen">
-      {step < 4 && (
+      {stepName !== "confirmation" && (
         <>
           <IntakeNav dirty={dirty} />
           <TopBar
-            step={step}
-            onBack={step > 1 ? () => setStep((s) => (s - 1) as Step) : undefined}
+            step={stepIndex + 1}
+            totalSteps={steps.length}
+            stepLabel={STEP_LABELS[stepName]}
+            onBack={stepIndex > 0 ? goBack : undefined}
           />
         </>
       )}
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={step}
+          key={stepName}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.3 }}
         >
-          {step === 1 && (
+          {stepName === "product" && (
             <ProductStep
               selected={product}
               onSelect={setProduct}
-              onContinue={() => setStep(2)}
+              onContinue={() =>
+                goTo(product === "website" ? "platform" : "details")
+              }
             />
           )}
-          {step === 2 && (
+          {stepName === "platform" && (
+            <PlatformStep
+              siteType={siteType}
+              platform={platform}
+              onSelectSiteType={setSiteType}
+              onSelectPlatform={setPlatform}
+              onContinue={() => goTo("details")}
+            />
+          )}
+          {stepName === "details" && (
             <DetailsStep
               initial={details}
               onContinue={(data) => {
                 setDetails(data);
-                setStep(3);
+                goTo("payment");
               }}
               onDirtyChange={setDetailsDirty}
             />
           )}
-          {step === 3 && product && (
-            <PaymentStep product={product} onSubmit={() => setStep(4)} />
+          {stepName === "payment" && product && (
+            <PaymentStep product={product} onSubmit={() => goTo("confirmation")} />
           )}
-          {step === 4 && <ConfirmationStep />}
+          {stepName === "confirmation" && <ConfirmationStep />}
         </motion.div>
       </AnimatePresence>
     </main>
