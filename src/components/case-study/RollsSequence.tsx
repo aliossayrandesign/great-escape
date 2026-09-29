@@ -73,13 +73,14 @@ export function RollsSequence() {
   });
 
   // Offsets are exact at the Figma reference width (1440px desktop frame).
-  // Scale down proportionally on narrower windows so cards can never be
-  // pushed past the viewport edge and clipped — floored at 0.4 so cards on
-  // phones still separate enough to read, instead of collapsing to a
-  // near-unreadable pile at the true 1440-proportional scale.
+  // Scale down proportionally on narrower windows, floored at 0.65 so cards
+  // on phones still spread apart noticeably instead of collapsing to a
+  // near-unreadable pile at the true 1440-proportional scale — some of the
+  // widest cards can bleed slightly past the screen edge at that floor,
+  // which reads fine since the section is already overflow-hidden.
   const [spread, setSpread] = useState(1);
   useEffect(() => {
-    const update = () => setSpread(Math.max(0.4, Math.min(1, window.innerWidth / 1440)));
+    const update = () => setSpread(Math.max(0.65, Math.min(1, window.innerWidth / 1440)));
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
