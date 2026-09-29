@@ -13,28 +13,32 @@ type Photo = {
   z: number;
 };
 
-// X is horizontal-only — safe to spread generously (scaled by `spread` for
-// narrow windows). Y is capped small on purpose: the stage sits right below
-// the heading with a fixed flex gap, and this keeps every card's top edge
-// (offset + half card height) inside that gap on any window height, so
-// nothing can ever climb up into the heading text.
+// Offsets are the exact card-center positions from the Figma reference
+// ("Landing — Desktop", 1440px frame), each measured relative to the notes
+// card's center — so `spread = 1` at a 1440px-wide stage reproduces the
+// reference layout exactly. Scaled down on narrower windows so cards can
+// never be pushed past the viewport edge and clipped.
 const PHOTOS: Photo[] = [
-  { src: "/images/case-studies/brand-guidelines/wordmark.webp", scatterX: -300, scatterY: -55, scatterRotate: -8, z: 10 },
-  { src: "/images/case-studies/brand-guidelines/colors.webp", scatterX: 300, scatterY: -65, scatterRotate: 6, z: 20 },
-  { src: "/images/case-studies/brand-guidelines/type.webp", scatterX: -330, scatterY: 65, scatterRotate: 7, z: 30 },
-  { src: "/images/case-studies/brand-guidelines/photography.webp", scatterX: 330, scatterY: 55, scatterRotate: -5, z: 40 },
-  { src: "/images/case-studies/brand-guidelines/brandmark.webp", scatterX: 0, scatterY: 90, scatterRotate: 3, z: 50 },
+  { src: "/images/case-studies/brand-guidelines/wordmark.webp", scatterX: -307, scatterY: -40, scatterRotate: -8, z: 10 },
+  { src: "/images/case-studies/brand-guidelines/colors.webp", scatterX: 318, scatterY: -81, scatterRotate: 6, z: 20 },
+  { src: "/images/case-studies/brand-guidelines/type.webp", scatterX: -267, scatterY: 134, scatterRotate: 7, z: 30 },
+  { src: "/images/case-studies/brand-guidelines/photography.webp", scatterX: 310, scatterY: 149, scatterRotate: -5, z: 40 },
+  { src: "/images/case-studies/brand-guidelines/brandmark.webp", scatterX: 30, scatterY: 208, scatterRotate: 3, z: 50 },
 ];
 
-const LINKS = ["liquiddeath.com", "feastables.com", "instagram.com/[brand]"];
+const LINKS = ["liquiddeath.com", "huel.com", "lastcrumb.com", "bloomnu.com"];
 const NOTES =
   "We're a bold, loud brand — think streetwear meets bakery, not another soft-serve “artisanal” food site. Big wordmark, punchy copy, real product shots doing the talking. Needs to actually sell, not just look nice.";
 
 // This whole section plays out ONCE as you scroll through it, then unpins
 // and normal static content follows below — no pinned content is ever
 // shared with what comes next, so there's nothing for it to ghost behind.
-// Phases: 0-0.4 hold (fully visible, nothing hidden) → 0.4-0.7 consolidate
-// (fly together into a stack) → 0.7-0.85 shrink → 0.85-1 dissolve.
+// Phases: 0-0.35 hold (fully visible, nothing hidden) → 0.35-0.6 consolidate
+// (fly together into a stack) → 0.6-0.75 shrink → 0.75-1 the whole stack
+// (cards + brief card) sinks down and fades together as ONE rigid unit, via
+// a single wrapper-level transform — so nothing drifts apart, and that last
+// quarter of the scroll range is wide enough that it tracks your scroll
+// instead of snapping.
 function PhotoLayer({
   photo,
   progress,
@@ -44,18 +48,17 @@ function PhotoLayer({
   progress: MotionValue<number>;
   spread: number;
 }) {
-  const x = useTransform(progress, [0.4, 0.7], [photo.scatterX * spread, 0]);
-  const y = useTransform(progress, [0.4, 0.7], [photo.scatterY * spread, 0]);
-  const rotate = useTransform(progress, [0.4, 0.7], [photo.scatterRotate, 0]);
-  const scale = useTransform(progress, [0.4, 0.7, 0.85], [1, 0.9, 0.4]);
-  const opacity = useTransform(progress, [0.85, 1], [1, 0]);
+  const x = useTransform(progress, [0.35, 0.6], [photo.scatterX * spread, 0]);
+  const y = useTransform(progress, [0.35, 0.6], [photo.scatterY * spread, 0]);
+  const rotate = useTransform(progress, [0.35, 0.6], [photo.scatterRotate, 0]);
+  const scale = useTransform(progress, [0.35, 0.6, 0.75], [1, 0.9, 0.45]);
 
   return (
     <motion.div
-      style={{ x, y, rotate, scale, opacity, zIndex: photo.z }}
-      className="absolute top-1/2 left-1/2 w-[220px] -translate-x-1/2 -translate-y-1/2 sm:w-[260px]"
+      style={{ x, y, rotate, scale, zIndex: photo.z }}
+      className="absolute top-1/2 left-1/2 w-[150px] -translate-x-1/2 -translate-y-1/2 sm:w-[280px]"
     >
-      <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-panel-stroke shadow-[0_20px_50px_-14px_rgba(0,0,0,0.75)]">
+      <div className="relative aspect-[5/4] overflow-hidden rounded-xl border border-panel-stroke shadow-[0_20px_50px_-14px_rgba(0,0,0,0.75)]">
         <Image src={photo.src} alt="" fill className="object-cover" sizes="300px" />
       </div>
     </motion.div>
@@ -69,22 +72,36 @@ export function RollsSequence() {
     offset: ["start start", "end end"],
   });
 
-  // The scatter offsets are tuned for a ~1100px-wide stage. On narrower
-  // windows, scale them down proportionally so cards can never be pushed
-  // past the viewport edge and clipped, regardless of window size.
+  // Offsets are exact at the Figma reference width (1440px desktop frame).
+  // Scale down proportionally on narrower windows so cards can never be
+  // pushed past the viewport edge and clipped — floored at 0.4 so cards on
+  // phones still separate enough to read, instead of collapsing to a
+  // near-unreadable pile at the true 1440-proportional scale.
   const [spread, setSpread] = useState(1);
   useEffect(() => {
-    const update = () => setSpread(Math.min(1, window.innerWidth / 1100));
+    const update = () => setSpread(Math.max(0.4, Math.min(1, window.innerWidth / 1440)));
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  const notesOpacity = useTransform(scrollYProgress, [0.4, 0.55], [1, 0]);
-  const notesScale = useTransform(scrollYProgress, [0.4, 0.55], [1, 0.9]);
+  // The brief card holds steady through the hold + consolidate phases, then
+  // shrinks into the stack in sync with the photos, nudging toward center so
+  // it converges with them — ending up behind the brandmark card (z-45 vs
+  // its z-50), which is the last thing left visible before the whole stack
+  // sinks away (see stackY/stackScale/stackOpacity below).
+  const notesY = useTransform(scrollYProgress, [0.6, 0.75], [0, -60]);
+  const notesScale = useTransform(scrollYProgress, [0.6, 0.75], [1, 0.45]);
+  const arrowOpacity = useTransform(scrollYProgress, [0.05, 0.2], [1, 0]);
+
+  // Applied once, at the wrapper level, so every card and the brief card
+  // move down and fade as a single rigid block — no per-element drift.
+  const stackY = useTransform(scrollYProgress, [0.75, 1], [0, 260]);
+  const stackScale = useTransform(scrollYProgress, [0.75, 1], [1, 0.7]);
+  const stackOpacity = useTransform(scrollYProgress, [0.85, 1], [1, 0]);
 
   return (
-    <div ref={scrollRef} style={{ height: "220vh" }}>
+    <div ref={scrollRef} style={{ height: "260vh" }}>
       <div className="sticky top-0 flex h-screen flex-col items-center justify-center gap-6 overflow-hidden px-4 sm:gap-8">
         <div
           aria-hidden
@@ -106,14 +123,17 @@ export function RollsSequence() {
           </h1>
         </div>
 
-        <div className="relative z-10 h-[280px] w-full max-w-3xl sm:h-[340px]">
+        <motion.div
+          style={{ y: stackY, scale: stackScale, opacity: stackOpacity }}
+          className="relative z-10 h-[400px] w-full max-w-3xl sm:h-[340px]"
+        >
           {PHOTOS.map((photo) => (
             <PhotoLayer key={photo.src} photo={photo} progress={scrollYProgress} spread={spread} />
           ))}
 
           <motion.div
-            style={{ opacity: notesOpacity, scale: notesScale }}
-            className="absolute top-[8%] left-1/2 z-[60] w-[82%] max-w-xs -translate-x-1/2 rounded-[20px] border border-panel-stroke bg-dark-950/95 p-5 text-left shadow-[0_20px_50px_-12px_rgba(0,0,0,0.8)] backdrop-blur-sm sm:top-[4%] sm:max-w-sm sm:p-6"
+            style={{ y: notesY, scale: notesScale, zIndex: 45 }}
+            className="absolute top-[2%] left-1/2 w-[75%] max-w-xs -translate-x-1/2 rounded-[20px] border border-panel-stroke bg-dark-950/95 p-4 text-left shadow-[0_20px_50px_-12px_rgba(0,0,0,0.8)] backdrop-blur-sm sm:top-[4%] sm:max-w-sm sm:p-6"
           >
             <p className="font-mono text-[10px] tracking-[0.15em] text-coral uppercase">
               The notes
@@ -132,10 +152,10 @@ export function RollsSequence() {
               ))}
             </div>
           </motion.div>
-        </div>
+        </motion.div>
 
         <motion.span
-          style={{ opacity: notesOpacity }}
+          style={{ opacity: arrowOpacity }}
           className="relative z-10 font-mono text-2xl text-dark-600"
         >
           ↓

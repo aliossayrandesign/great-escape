@@ -13,15 +13,15 @@ export const metadata: Metadata = {
 };
 
 const STATS = [
-  { label: "Turnaround", value: "6 days" },
-  { label: "Built on", value: "Framer" },
+  { label: "Turnaround", value: "7 days" },
+  { label: "Built on", value: "Shopify" },
   { label: "Revisions", value: "2 rounds" },
 ];
 
 export default function RollsCaseStudy() {
   return (
-    <main className="min-h-screen">
-      <nav className="flex items-center justify-between border-b border-panel-stroke/40 bg-dark-950/70 px-4 py-5 backdrop-blur-md sm:px-8 sm:py-6">
+    <main className="min-h-screen pt-[81px] sm:pt-[105px]">
+      <nav className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-panel-stroke/40 bg-dark-950/70 px-4 py-5 backdrop-blur-md sm:px-8 sm:py-6">
         <Link href="/" className="flex items-center">
           <Image
             src="/images/logo.svg"
@@ -54,11 +54,11 @@ export default function RollsCaseStudy() {
         <div className="grid grid-cols-3 gap-4 border-y border-panel-stroke py-8 text-center sm:gap-8">
           {STATS.map((stat) => (
             <div key={stat.label}>
-              <p className="text-2xl font-semibold tracking-tight sm:text-4xl">
-                {stat.value}
-              </p>
-              <p className="mt-1 font-mono text-[10px] tracking-[0.15em] text-dark-400 uppercase sm:text-xs">
+              <p className="font-mono text-[10px] tracking-[0.15em] text-dark-400 uppercase sm:text-xs">
                 {stat.label}
+              </p>
+              <p className="mt-1 text-2xl font-semibold tracking-tight sm:text-4xl">
+                {stat.value}
               </p>
             </div>
           ))}
