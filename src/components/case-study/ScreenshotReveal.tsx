@@ -14,11 +14,6 @@ const SCREENSHOTS = [
     desktop: { src: "/images/case-studies/rolls-flavors-desktop.png", aspect: "aspect-[8/5]" },
     mobile: { src: "/images/case-studies/rolls-flavors-mobile.png", aspect: "aspect-[248/369]" },
   },
-  {
-    alt: "The product photography section",
-    desktop: { src: "/images/case-studies/rolls-food-desktop-v2.png", aspect: "aspect-[20/7]" },
-    mobile: { src: "/images/case-studies/rolls-food-mobile-v3.png", aspect: "aspect-[390/420]" },
-  },
 ];
 
 export function ScreenshotReveal() {
