@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { PillButton } from "@/components/ui/PillButton";
 import { RollsSequence } from "@/components/case-study/RollsSequence";
+import { ScreenshotReveal } from "@/components/case-study/ScreenshotReveal";
 
 export const metadata: Metadata = {
   title: "Watch it ship — great esc.",
@@ -46,6 +47,8 @@ export default function RollsCaseStudy() {
       </nav>
 
       <RollsSequence />
+
+      <ScreenshotReveal />
 
       <div className="mx-auto max-w-3xl px-4 pb-24 sm:px-8">
         <div className="grid grid-cols-3 gap-4 border-y border-panel-stroke py-8 text-center sm:gap-8">
