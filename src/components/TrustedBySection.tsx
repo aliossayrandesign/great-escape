@@ -10,7 +10,7 @@ const BRANDS = [
   { name: "Spotify", src: "/images/logos/spotify.svg", className: "h-4 sm:h-7 md:h-8 lg:h-10" },
   { name: "GoPuff", src: "/images/logos/gopuff.svg" },
   { name: "BevMo", src: "/images/logos/bevmo.svg" },
-  { name: "Halo Top", src: "/images/logos/halotop.svg", className: "h-4 sm:h-6 md:h-7 lg:h-9" },
+  { name: "Halo Top", src: "/images/logos/halotop.svg", className: "h-6 sm:h-9 md:h-10 lg:h-12" },
   { name: "Sunrun", src: "/images/logos/sunrun.png" },
 ];
 
