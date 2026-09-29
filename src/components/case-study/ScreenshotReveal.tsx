@@ -7,7 +7,7 @@ const SCREENSHOTS = [
   {
     alt: "The homepage hero",
     desktop: { src: "/images/case-studies/rolls-hero-desktop.png", aspect: "aspect-[8/5]" },
-    mobile: { src: "/images/case-studies/rolls-hero-mobile.png", aspect: "aspect-[390/620]" },
+    mobile: { src: "/images/case-studies/rolls-hero-mobile-v2.png", aspect: "aspect-[390/620]" },
   },
   {
     alt: "The flavors lineup section",
@@ -16,8 +16,8 @@ const SCREENSHOTS = [
   },
   {
     alt: "The product photography section",
-    desktop: { src: "/images/case-studies/rolls-food-desktop.png", aspect: "aspect-[20/7]" },
-    mobile: { src: "/images/case-studies/rolls-food-mobile-v2.png", aspect: "aspect-[390/420]" },
+    desktop: { src: "/images/case-studies/rolls-food-desktop-v2.png", aspect: "aspect-[20/7]" },
+    mobile: { src: "/images/case-studies/rolls-food-mobile-v3.png", aspect: "aspect-[390/420]" },
   },
 ];
 
