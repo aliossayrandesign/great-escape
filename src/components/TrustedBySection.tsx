@@ -2,16 +2,18 @@
 
 import { motion } from "framer-motion";
 
-const LOGO_CLASS =
-  "h-3 w-auto shrink-0 brightness-0 invert opacity-40 transition-opacity duration-200 hover:opacity-80 sm:h-5 md:h-6 lg:h-8";
+const LOGO_BASE =
+  "w-auto shrink-0 brightness-0 invert opacity-40 transition-opacity duration-200 hover:opacity-80";
+
+const DEFAULT_SIZE = "h-3 sm:h-5 md:h-6 lg:h-8";
 
 const BRANDS = [
-  { name: "Disney", src: "/images/logos/disney.png", className: "h-4 sm:h-7 md:h-8 lg:h-10" },
-  { name: "Spotify", src: "/images/logos/spotify.svg", className: "h-5 sm:h-8 md:h-9 lg:h-11" },
-  { name: "GoPuff", src: "/images/logos/gopuff.svg" },
-  { name: "BevMo", src: "/images/logos/bevmo.svg", className: "h-2.5 sm:h-4 md:h-5 lg:h-7" },
-  { name: "Halo Top", src: "/images/logos/halotop.svg", className: "h-6 sm:h-9 md:h-10 lg:h-12" },
-  { name: "Sunrun", src: "/images/logos/sunrun.png", className: "h-2.5 sm:h-4 md:h-5 lg:h-7" },
+  { name: "Disney", src: "/images/logos/disney.png", size: "h-4 sm:h-7 md:h-8 lg:h-10" },
+  { name: "Spotify", src: "/images/logos/spotify.svg", size: "h-5 sm:h-8 md:h-9 lg:h-11" },
+  { name: "GoPuff", src: "/images/logos/gopuff.svg", size: DEFAULT_SIZE },
+  { name: "BevMo", src: "/images/logos/bevmo.svg", size: "h-2 sm:h-3.5 md:h-4 lg:h-6" },
+  { name: "Halo Top", src: "/images/logos/halotop.svg", size: "h-6 sm:h-9 md:h-10 lg:h-12" },
+  { name: "Sunrun", src: "/images/logos/sunrun.png", size: "h-2 sm:h-3.5 md:h-4 lg:h-6" },
 ];
 
 export function TrustedBySection() {
@@ -35,13 +37,13 @@ export function TrustedBySection() {
         transition={{ duration: 0.5, delay: 0.1 }}
         className="mx-auto mt-6 flex max-w-full flex-nowrap items-center justify-center gap-x-3 overflow-x-auto px-2 sm:mt-8 sm:gap-x-6 md:gap-x-8 lg:gap-x-12"
       >
-        {BRANDS.map(({ name, src, className }) => (
+        {BRANDS.map(({ name, src, size }) => (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             key={name}
             src={src}
             alt={name}
-            className={`${LOGO_CLASS} ${className ?? ""}`}
+            className={`${LOGO_BASE} ${size}`}
           />
         ))}
       </motion.div>
