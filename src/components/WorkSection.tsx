@@ -12,6 +12,7 @@ import { GlowFog } from "./ui/GlowFog";
 
 const TOOLS = {
   framer: { label: "Framer", icon: "/images/platforms/framer.svg", w: 179, h: 269 },
+  shopify: { label: "Shopify", icon: "/images/platforms/shopify.svg", w: 258, h: 293 },
   code: { label: "Custom code", icon: "/images/platforms/custom-code.svg", w: 24, h: 24 },
   figma: { label: "Figma", icon: "/images/platforms/figma.svg", w: 24, h: 24 },
   pdf: { label: "PDF", icon: "/images/platforms/pdf.svg", w: 24, h: 24 },
@@ -33,7 +34,7 @@ const PRODUCTS = [
       "Launch-ready structure, SEO built in",
     ],
     image: "/images/card-website.png",
-    tools: [TOOLS.framer, TOOLS.code],
+    tools: [TOOLS.framer, TOOLS.shopify, TOOLS.code],
   },
   {
     id: "app",

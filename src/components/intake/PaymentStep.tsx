@@ -11,6 +11,49 @@ import type { StripeElementsOptions } from "@stripe/stripe-js";
 import { getStripe } from "@/lib/stripe-client";
 import { PRODUCT_LABEL, PRODUCT_PRICE, type ProductType } from "@/lib/products";
 import { PillButton } from "../ui/PillButton";
+import type { DetailsData } from "./DetailsStep";
+import type { Platform, SiteType } from "./PlatformStep";
+
+async function sendOrderNotification({
+  paymentIntentId,
+  product,
+  siteType,
+  platform,
+  details,
+}: {
+  paymentIntentId: string;
+  product: ProductType;
+  siteType: SiteType | null;
+  platform: Platform | null;
+  details: DetailsData;
+}) {
+  try {
+    await fetch("/api/send-order-notification", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        paymentIntentId,
+        product,
+        siteType,
+        platform,
+        details: {
+          name: details.name,
+          email: details.email,
+          company: details.company,
+          brandFileName: details.brandFile?.name ?? null,
+          currentProductFileName: details.currentProductFile?.name ?? null,
+          currentProductLink: details.currentProductLink,
+          links: details.links,
+          notes: details.notes,
+        },
+      }),
+    });
+  } catch {
+    // Don't block the customer's success screen on our own notification
+    // failing — worth alerting on separately, but not their problem.
+    console.error("Failed to send order notification");
+  }
+}
 
 const APPEARANCE: StripeElementsOptions["appearance"] = {
   theme: "night",
@@ -83,9 +126,15 @@ const APPEARANCE: StripeElementsOptions["appearance"] = {
 
 function PaymentForm({
   product,
+  siteType,
+  platform,
+  details,
   onSubmit,
 }: {
   product: ProductType;
+  siteType: SiteType | null;
+  platform: Platform | null;
+  details: DetailsData;
   onSubmit: () => void;
 }) {
   const stripe = useStripe();
@@ -101,7 +150,7 @@ function PaymentForm({
     setSubmitting(true);
     setError(null);
 
-    const { error: confirmError } = await stripe.confirmPayment({
+    const { error: confirmError, paymentIntent } = await stripe.confirmPayment({
       elements,
       redirect: "if_required",
     });
@@ -112,6 +161,16 @@ function PaymentForm({
       );
       setSubmitting(false);
       return;
+    }
+
+    if (paymentIntent) {
+      await sendOrderNotification({
+        paymentIntentId: paymentIntent.id,
+        product,
+        siteType,
+        platform,
+        details,
+      });
     }
 
     onSubmit();
@@ -188,9 +247,15 @@ function PaymentForm({
 
 export function PaymentStep({
   product,
+  siteType,
+  platform,
+  details,
   onSubmit,
 }: {
   product: ProductType;
+  siteType: SiteType | null;
+  platform: Platform | null;
+  details: DetailsData;
   onSubmit: () => void;
 }) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -251,7 +316,13 @@ export function PaymentStep({
 
   return (
     <Elements stripe={getStripe()} options={options}>
-      <PaymentForm product={product} onSubmit={onSubmit} />
+      <PaymentForm
+        product={product}
+        siteType={siteType}
+        platform={platform}
+        details={details}
+        onSubmit={onSubmit}
+      />
     </Elements>
   );
 }

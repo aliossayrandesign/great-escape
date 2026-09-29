@@ -79,16 +79,14 @@ function StartPageInner() {
 
   return (
     <main className="min-h-screen">
+      <IntakeNav dirty={dirty} showCancel={stepName !== "confirmation"} />
       {stepName !== "confirmation" && (
-        <>
-          <IntakeNav dirty={dirty} />
-          <TopBar
-            step={stepIndex + 1}
-            totalSteps={steps.length}
-            stepLabel={STEP_LABELS[stepName]}
-            onBack={stepIndex > 0 ? goBack : undefined}
-          />
-        </>
+        <TopBar
+          step={stepIndex + 1}
+          totalSteps={steps.length}
+          stepLabel={STEP_LABELS[stepName]}
+          onBack={stepIndex > 0 ? goBack : undefined}
+        />
       )}
 
       <AnimatePresence mode="wait">
@@ -128,7 +126,13 @@ function StartPageInner() {
             />
           )}
           {stepName === "payment" && product && (
-            <PaymentStep product={product} onSubmit={() => goTo("confirmation")} />
+            <PaymentStep
+              product={product}
+              siteType={siteType}
+              platform={platform}
+              details={details}
+              onSubmit={() => goTo("confirmation")}
+            />
           )}
           {stepName === "confirmation" && <ConfirmationStep />}
         </motion.div>
