@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
-import { PillButton } from "@/components/ui/PillButton";
 import { RollsSequence } from "@/components/case-study/RollsSequence";
 import { ScreenshotReveal } from "@/components/case-study/ScreenshotReveal";
 
@@ -69,10 +68,17 @@ export default function RollsCaseStudy() {
             Want yours to look like this?
           </h2>
           <div className="mt-8 flex justify-center">
-            <Link href="/start">
-              <PillButton size="xl" variant="paper" className="h-14 w-[262px]">
-                Start your escape →
-              </PillButton>
+            <Link
+              href="/start"
+              className="inline-block transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
+            >
+              <Image
+                src="/images/nav-cta.svg"
+                alt="Start your escape"
+                width={328}
+                height={70}
+                className="h-14 w-auto"
+              />
             </Link>
           </div>
         </div>
