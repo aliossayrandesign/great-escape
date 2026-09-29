@@ -28,10 +28,10 @@ export function CTASection() {
         <p className="font-mono text-xs tracking-[0.2em] text-coral uppercase">
           + Ready When You Are +
         </p>
-        <h2 className="mx-auto mt-4 max-w-3xl text-5xl leading-[0.95] font-semibold tracking-tight sm:text-7xl">
+        <h2 className="mx-auto mt-4 max-w-3xl text-balance text-5xl leading-[0.95] font-semibold tracking-tight sm:text-7xl">
           Your next project is one <span className="text-coral">brief</span> away.
         </h2>
-        <p className="mx-auto mt-5 max-w-md text-paper/60">
+        <p className="mx-auto mt-5 max-w-md text-pretty text-paper/60">
           Tell us your product. Get back a fully designed website, app, or
           pitch deck in a week — no meetings required.
         </p>

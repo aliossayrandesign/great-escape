@@ -24,7 +24,7 @@ export function TrustedBySection() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.5 }}
-        className="mx-auto max-w-xs text-center font-mono text-[10px] leading-relaxed tracking-[0.08em] text-coral uppercase sm:mx-0 sm:max-w-none sm:whitespace-nowrap sm:text-[10px] sm:tracking-[0.12em] xl:text-xs xl:tracking-[0.2em]"
+        className="mx-auto max-w-xs text-balance text-center font-mono text-[10px] leading-relaxed tracking-[0.08em] text-coral uppercase sm:mx-0 sm:max-w-none sm:whitespace-nowrap sm:text-[10px] sm:tracking-[0.12em] xl:text-xs xl:tracking-[0.2em]"
       >
         + Every project personally refined by designers who&apos;ve created
         work for +

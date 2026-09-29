@@ -88,10 +88,10 @@ export function PlatformStep({
         <p className="font-mono text-xs tracking-[0.2em] text-coral uppercase">
           + Build It On +
         </p>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h1 className="mt-4 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
           What kind of site?
         </h1>
-        <p className="mt-3 text-paper/60">
+        <p className="mt-3 text-pretty text-paper/60">
           This decides what we build it on — you can go either way.
         </p>
       </div>
@@ -109,10 +109,10 @@ export function PlatformStep({
                   : "ring-transparent hover:ring-dark-600"
               }`}
             >
-              <h3 className="text-xl font-semibold tracking-tight">
+              <h3 className="text-balance text-xl font-semibold tracking-tight">
                 {type.title}
               </h3>
-              <p className="mt-2 text-sm text-paper/60">{type.description}</p>
+              <p className="mt-2 text-pretty text-sm text-paper/60">{type.description}</p>
             </button>
           );
         })}
@@ -155,7 +155,7 @@ export function PlatformStep({
                     />
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="text-lg font-semibold tracking-tight">
+                        <h3 className="text-balance text-lg font-semibold tracking-tight">
                           {p.title}
                         </h3>
                         {isRecommended && (
@@ -164,7 +164,7 @@ export function PlatformStep({
                           </span>
                         )}
                       </div>
-                      <p className="mt-1 text-sm text-paper/60">
+                      <p className="mt-1 text-pretty text-sm text-paper/60">
                         {p.description}
                       </p>
                     </div>

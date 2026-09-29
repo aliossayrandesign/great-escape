@@ -39,10 +39,10 @@ export function PaymentStep({
   return (
     <div className="mx-auto max-w-4xl px-6 pt-6 pb-32 sm:px-16">
       <div className="text-center">
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
           Lock it in.
         </h1>
-        <p className="mt-3 text-paper/60">
+        <p className="text-pretty mt-3 text-paper/60">
           One last step — then we start on your {PRODUCT_LABEL[product].toLowerCase()}.
         </p>
       </div>
@@ -68,7 +68,7 @@ export function PaymentStep({
               ${price.toLocaleString()}
             </span>
           </div>
-          <p className="mt-6 text-xs leading-relaxed text-dark-400">
+          <p className="mt-6 text-pretty text-xs leading-relaxed text-dark-400">
             First look delivered within 1 week of payment. Up to 3 rounds
             of revisions included.
           </p>
@@ -103,7 +103,7 @@ export function PaymentStep({
           </div>
 
           <div className="mt-6 flex flex-col gap-4">
-            <span className="text-center text-xs text-dark-400">
+            <span className="text-balance text-center text-xs text-dark-400">
               Secured by Stripe — placeholder form for now
             </span>
             <PillButton

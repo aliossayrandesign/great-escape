@@ -23,7 +23,7 @@ export function Footer() {
               className="h-[26px] w-auto"
             />
           </Link>
-          <p className="max-w-xs text-sm text-paper/50">
+          <p className="max-w-xs text-pretty text-sm text-paper/50">
             An automated creative studio — one brief, one week, one fully
             designed escape.
           </p>

@@ -87,10 +87,10 @@ export function DetailsStep({
   return (
     <div className="mx-auto max-w-7xl px-6 pt-6 pb-40 sm:px-10">
       <div className="text-center">
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
           Show us your vibe.
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-paper/60">
+        <p className="mx-auto mt-3 max-w-xl text-pretty text-paper/60">
           Submit your branding, drop a few inspiration links / brands you
           love, and tell us about your product. We&apos;ll take it from
           there.
@@ -98,7 +98,7 @@ export function DetailsStep({
       </div>
 
       <div className="mt-12">
-        <p className="mb-3 font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
+        <p className="mb-3 text-balance font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
           Your Info
         </p>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -134,7 +134,7 @@ export function DetailsStep({
 
       <div className="mt-10 grid grid-cols-1 gap-10 sm:grid-cols-3">
         <div>
-          <p className="mb-3 font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
+          <p className="mb-3 text-balance font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
             Brand Guidelines
           </p>
           <label
@@ -158,7 +158,7 @@ export function DetailsStep({
               className="hidden"
               onChange={(e) => handleFiles(e.target.files)}
             />
-            <p className="text-lg font-semibold">
+            <p className="text-balance text-lg font-semibold">
               {brandFile ? brandFile.name : "Drop your brand file here"}
             </p>
             <button
@@ -172,7 +172,7 @@ export function DetailsStep({
         </div>
 
         <div>
-          <p className="mb-3 font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
+          <p className="mb-3 text-balance font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
             Current Product
           </p>
           <div
@@ -196,7 +196,7 @@ export function DetailsStep({
               className="hidden"
               onChange={(e) => handleCurrentProductFiles(e.target.files)}
             />
-            <p className="text-lg font-semibold">
+            <p className="text-balance text-lg font-semibold">
               {currentProductFile
                 ? currentProductFile.name
                 : "Have an existing site, app, or deck?"}
@@ -220,7 +220,7 @@ export function DetailsStep({
         </div>
 
         <div>
-          <p className="mb-3 font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
+          <p className="mb-3 text-balance font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
             Inspiration Links
           </p>
           <div className="flex flex-col gap-3">
@@ -259,7 +259,7 @@ export function DetailsStep({
       </div>
 
       <div className="mt-10">
-        <p className="mb-3 font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
+        <p className="mb-3 text-balance font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
           Product Description &amp; Notes
         </p>
         <div className="rounded-[30px] border border-panel-stroke bg-dark-950">

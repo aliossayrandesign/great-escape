@@ -68,10 +68,10 @@ export function ProductStep({
         <p className="font-mono text-xs tracking-[0.2em] text-coral uppercase">
           + Your Escape +
         </p>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h1 className="mt-4 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
           What are we building?
         </h1>
-        <p className="mt-3 text-paper/60">
+        <p className="mt-3 text-pretty text-paper/60">
           Pick one — you can always come back for another.
         </p>
       </div>
@@ -103,14 +103,14 @@ export function ProductStep({
 
                 <div className="flex flex-1 flex-col p-7">
                   <div className="flex items-start justify-between gap-3">
-                    <h3 className="text-2xl font-semibold tracking-tight">
+                    <h3 className="text-balance text-2xl font-semibold tracking-tight">
                       {product.title}
                     </h3>
                     <span className="shrink-0 rounded-full bg-dark-900/80 px-3 py-1 font-mono text-xs tracking-[0.1em] text-coral">
                       ${product.price.toLocaleString()}
                     </span>
                   </div>
-                  <p className="mt-3 text-sm leading-relaxed text-paper/60">
+                  <p className="mt-3 text-pretty text-sm leading-relaxed text-paper/60">
                     {product.description}
                   </p>
                   <ul className="mt-6 flex-1 space-y-2.5 border-t border-paper/10 pt-5">
