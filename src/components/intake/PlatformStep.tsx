@@ -43,7 +43,7 @@ const PLATFORMS: Record<
 };
 
 const PLATFORM_OPTIONS: Record<SiteType, Platform[]> = {
-  ecommerce: ["shopify"],
+  ecommerce: ["shopify", "custom"],
   marketing: ["framer", "custom"],
 };
 

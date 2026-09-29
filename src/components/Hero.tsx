@@ -40,7 +40,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-5xl leading-[0.92] font-semibold tracking-[-0.03em] sm:text-7xl"
+              className="text-balance text-5xl leading-[0.92] font-semibold tracking-[-0.03em] sm:text-7xl"
             >
               Escape the <span className="text-coral">ordinary.</span>
             </motion.h1>
@@ -49,7 +49,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-6 max-w-md text-base text-paper/70 sm:text-lg"
+              className="mt-6 max-w-md text-pretty text-base text-paper/70 sm:text-lg"
             >
               Tell us your product, drop your inspo links, and get back a
               fully designed website, app, or pitch deck. No meetings, no
