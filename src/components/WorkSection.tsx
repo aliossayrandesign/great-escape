@@ -81,13 +81,13 @@ function ProductPanel({ product }: { product: Product }) {
         <span className="font-mono text-xs tracking-[0.2em] text-coral">
           {product.number}
         </span>
-        <h3 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h3 className="mt-3 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
           {product.title}
         </h3>
-        <p className="mt-4 text-xl font-semibold tracking-tight text-paper/90 sm:text-2xl">
+        <p className="mt-4 text-balance text-xl font-semibold tracking-tight text-paper/90 sm:text-2xl">
           {product.tagline}
         </p>
-        <p className="mt-4 max-w-md text-paper/60">{product.description}</p>
+        <p className="mt-4 max-w-md text-pretty text-paper/60">{product.description}</p>
         <ul className="mt-8 space-y-3 border-t border-paper/10 pt-6">
           {product.included.map((item) => (
             <li
@@ -152,10 +152,10 @@ export function WorkSection() {
         <p className="font-mono text-xs tracking-[0.2em] text-coral uppercase">
           + What You Get +
         </p>
-        <h2 className="mt-4 text-5xl leading-[0.95] font-semibold tracking-tight sm:text-7xl">
+        <h2 className="mt-4 text-balance text-5xl leading-[0.95] font-semibold tracking-tight sm:text-7xl">
           Know exactly <span className="text-coral">what ships.</span>
         </h2>
-        <p className="mx-auto mt-4 max-w-md text-paper/60">
+        <p className="mx-auto mt-4 max-w-md text-pretty text-paper/60">
           No vague scopes. Here&apos;s precisely what&apos;s in each escape.
         </p>
       </div>

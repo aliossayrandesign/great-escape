@@ -57,7 +57,7 @@ export function PricingSection() {
           <br />
           <span className="text-coral">No surprises.</span>
         </h2>
-        <p className="mx-auto mt-4 max-w-md text-paper/60">
+        <p className="mx-auto mt-4 max-w-md text-pretty text-paper/60">
           Pick your product, pay once, get it built.
         </p>
       </div>
@@ -72,10 +72,10 @@ export function PricingSection() {
             transition={{ duration: 0.6, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col rounded-[28px] border border-panel-stroke bg-dark-950/75 p-8 backdrop-blur-md"
           >
-            <h3 className="text-2xl font-semibold tracking-tight">
+            <h3 className="text-balance text-2xl font-semibold tracking-tight">
               {plan.title}
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-paper/60">
+            <p className="mt-2 text-pretty text-sm leading-relaxed text-paper/60">
               {plan.description}
             </p>
             <div className="mt-6 text-5xl font-semibold tracking-tight">

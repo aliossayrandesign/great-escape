@@ -23,22 +23,34 @@ const SITE_TYPES: { id: SiteType; title: string; description: string }[] = [
 
 const PLATFORMS: Record<
   Platform,
-  { title: string; description: string; icon: string }
+  {
+    title: string;
+    description: string;
+    icon: string;
+    iconWidth: number;
+    iconHeight: number;
+  }
 > = {
   shopify: {
     title: "Shopify",
     description: "The standard for online stores — built to sell.",
     icon: "/images/platforms/shopify.svg",
+    iconWidth: 258,
+    iconHeight: 293,
   },
   framer: {
     title: "Framer",
     description: "Fast, flexible, and easy for you to edit yourself.",
     icon: "/images/platforms/framer.svg",
+    iconWidth: 179,
+    iconHeight: 269,
   },
   custom: {
     title: "Custom-coded",
     description: "Fully bespoke, for when off-the-shelf won't cut it.",
     icon: "/images/platforms/custom-code.svg",
+    iconWidth: 24,
+    iconHeight: 24,
   },
 };
 
@@ -137,9 +149,9 @@ export function PlatformStep({
                     <Image
                       src={p.icon}
                       alt={p.title}
-                      width={24}
-                      height={24}
-                      className="mt-1 h-6 w-6 shrink-0 opacity-70"
+                      width={p.iconWidth}
+                      height={p.iconHeight}
+                      className="mt-1 h-6 w-auto shrink-0 opacity-70"
                     />
                     <div>
                       <div className="flex items-center gap-2">

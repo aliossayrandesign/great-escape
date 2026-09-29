@@ -73,10 +73,10 @@ export function ProcessSection() {
               >
                 {step.number}
               </span>
-              <h3 className="relative text-2xl font-semibold tracking-tight">
+              <h3 className="relative text-balance text-2xl font-semibold tracking-tight">
                 {step.title}
               </h3>
-              <p className="relative mt-3 font-mono text-sm leading-relaxed text-paper/80">
+              <p className="relative mt-3 text-pretty font-mono text-sm leading-relaxed text-paper/80">
                 + {step.description}
               </p>
             </motion.div>
