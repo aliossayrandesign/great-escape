@@ -123,7 +123,7 @@ function StickyTakeover() {
 
   return (
     <div ref={scrollRef} style={{ height: `${PRODUCTS.length * 100}vh` }}>
-      <div className="sticky top-[120px] h-[calc(100vh-120px)] overflow-hidden">
+      <div className="sticky top-[105px] h-[calc(100vh-105px)] overflow-hidden">
         {/* Default (simultaneous) mode crossfades the outgoing and
             incoming panel together — at most two are ever mounted, and
             only for the transition's duration, instead of every panel
