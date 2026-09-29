@@ -7,7 +7,7 @@ const LOGO_CLASS =
 
 const BRANDS = [
   { name: "Disney", src: "/images/logos/disney.png", className: "h-4 sm:h-7 md:h-8 lg:h-10" },
-  { name: "Spotify", src: "/images/logos/spotify.svg", className: "h-4 sm:h-7 md:h-8 lg:h-10" },
+  { name: "Spotify", src: "/images/logos/spotify.svg", className: "h-5 sm:h-8 md:h-9 lg:h-11" },
   { name: "GoPuff", src: "/images/logos/gopuff.svg" },
   { name: "BevMo", src: "/images/logos/bevmo.svg" },
   { name: "Halo Top", src: "/images/logos/halotop.svg", className: "h-6 sm:h-9 md:h-10 lg:h-12" },
