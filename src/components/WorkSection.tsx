@@ -135,7 +135,7 @@ function StickyTakeover() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.03 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 flex items-center pb-[120px]"
+            className="absolute inset-0 flex items-center"
           >
             <ProductPanel product={PRODUCTS[active]} />
           </motion.div>
