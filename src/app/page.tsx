@@ -3,6 +3,7 @@ import { Hero } from "@/components/Hero";
 import { TrustedBySection } from "@/components/TrustedBySection";
 import { ProcessSection } from "@/components/ProcessSection";
 import { WorkSection } from "@/components/WorkSection";
+import { CaseStudyTeaser } from "@/components/CaseStudyTeaser";
 import { PricingSection } from "@/components/PricingSection";
 import { CTASection } from "@/components/CTASection";
 import { Footer } from "@/components/Footer";
@@ -17,6 +18,7 @@ export default function Home() {
       <TrustedBySection />
       <ProcessSection />
       <WorkSection />
+      <CaseStudyTeaser />
       <PricingSection />
       <CTASection />
       <Footer />

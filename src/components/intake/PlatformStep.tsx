@@ -176,6 +176,23 @@ export function PlatformStep({
         )}
       </AnimatePresence>
 
+      <AnimatePresence mode="wait">
+        {(platform === "shopify" || platform === "framer") && (
+          <motion.p
+            key={platform}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+            className="mx-auto mt-6 max-w-lg text-pretty text-center text-xs leading-relaxed text-dark-400"
+          >
+            We design and build your {PLATFORMS[platform].title} site through
+            transfer — after that, you&apos;re responsible for your own{" "}
+            {PLATFORMS[platform].title} subscription to keep it live.
+          </motion.p>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {siteType && platform && (
           <motion.div
@@ -183,7 +200,7 @@ export function PlatformStep({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.7, y: -10 }}
             transition={{ duration: 0.35, ease: "backOut" }}
-            className="mt-10 flex justify-center"
+            className="mt-6 flex justify-center"
           >
             <PillButton
               size="xl"

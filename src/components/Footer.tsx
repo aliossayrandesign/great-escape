@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 const LINKS = [
-  { href: "#process", label: "Process" },
-  { href: "#work", label: "Work" },
-  { href: "#pricing", label: "Pricing" },
+  { href: "/#process", label: "Process" },
+  { href: "/#work", label: "Work" },
+  { href: "/#pricing", label: "Pricing" },
 ];
 
 export function Footer() {
