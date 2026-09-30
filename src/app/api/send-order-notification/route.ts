@@ -1,7 +1,4 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-import sharp from "sharp";
 import { stripe } from "@/lib/stripe";
 import { getResend, ORDER_NOTIFICATION_TO } from "@/lib/resend";
 import { PRODUCT_LABEL, PRODUCT_PRICE, type ProductType } from "@/lib/products";
@@ -31,44 +28,26 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
-// Most email clients (Gmail especially) strip @font-face CSS, so the site's
-// actual DM Mono font can't be loaded as a webfont in the email body. To
-// keep the recurring "+ LABEL +" eyebrows visually consistent with the site
-// anyway, they're rasterized with the real font at request time and
-// embedded as data-URI images — those render identically everywhere,
-// regardless of what the client's CSS sanitizer allows.
-const monoFontBase64 = fs
-  .readFileSync(path.join(process.cwd(), "public/fonts-src/DMMono-Medium.ttf"))
-  .toString("base64");
+// Most email clients (Gmail especially) strip @font-face CSS, and Gmail
+// additionally refuses to render inline data-URI images altogether. So the
+// site's real DM Mono font can't be loaded as a webfont or embedded inline
+// — these recurring "+ LABEL +" eyebrows are pre-rendered with the real
+// font as plain hosted PNGs instead (see the label-generation script in the
+// project scratchpad), which every client renders identically.
+const LABELS = {
+  newOrder: { file: "new-order", width: 132, alt: "New Order" },
+  contact: { file: "contact", width: 107, alt: "Contact" },
+  platform: { file: "platform", width: 118, alt: "Platform" },
+  brandFile: { file: "brand-file", width: 133, alt: "Brand file" },
+  currentProduct: { file: "current-product", width: 196, alt: "Current product" },
+  inspiration: { file: "inspiration-links", width: 190, alt: "Inspiration links" },
+  notes: { file: "notes", width: 86, alt: "Notes" },
+  footer: { file: "footer", width: 227, alt: "Escape the ordinary" },
+} as const;
 
-async function renderMonoLabel(text: string, color: string) {
-  const fontSize = 34;
-  const svg = `
-    <svg width="1000" height="90" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <style>
-          @font-face {
-            font-family: 'DM Mono Email';
-            src: url(data:font/ttf;base64,${monoFontBase64}) format('truetype');
-          }
-        </style>
-      </defs>
-      <text x="0" y="62" font-family="DM Mono Email" font-size="${fontSize}" letter-spacing="3.5" fill="${color}">${text}</text>
-    </svg>
-  `;
-  const buffer = await sharp(Buffer.from(svg)).png().trim().toBuffer();
-  const meta = await sharp(buffer).metadata();
-  const scale = 1 / 3;
-  return {
-    src: `data:image/png;base64,${buffer.toString("base64")}`,
-    width: Math.round((meta.width ?? 0) * scale),
-    height: Math.round((meta.height ?? 0) * scale),
-  };
-}
-
-async function labelImg(text: string, color: string = "#ff8a8a") {
-  const { src, width, height } = await renderMonoLabel(`+ ${text.toUpperCase()} +`, color);
-  return `<img src="${src}" width="${width}" height="${height}" alt="${escapeHtml(text)}" style="display:block;" />`;
+function labelImg(key: keyof typeof LABELS) {
+  const { file, width, alt } = LABELS[key];
+  return `<img src="https://great-escape-five.vercel.app/images/email/labels/${file}.png" width="${width}" height="11" alt="${escapeHtml(alt)}" style="display:block;" />`;
 }
 
 export async function POST(request: Request) {
@@ -107,26 +86,6 @@ export async function POST(request: Request) {
     )
     .join("");
 
-  const [
-    newOrderLabel,
-    contactLabel,
-    platformLabel,
-    brandFileLabel,
-    currentProductLabel,
-    inspirationLabel,
-    notesLabel,
-    footerLabel,
-  ] = await Promise.all([
-    labelImg("New Order"),
-    labelImg("Contact"),
-    labelImg("Platform"),
-    labelImg("Brand file"),
-    labelImg("Current product"),
-    labelImg("Inspiration links"),
-    labelImg("Notes"),
-    labelImg("Escape the ordinary", "#5a5a5a"),
-  ]);
-
   const section = (labelHtml: string, content: string) => `
     <tr>
       <td style="padding:20px 32px; border-top:1px solid #262626;">
@@ -154,7 +113,7 @@ export async function POST(request: Request) {
         </tr>
         <tr>
           <td style="padding:24px 32px 28px;">
-            ${newOrderLabel}
+            ${labelImg("newOrder")}
             <div style="margin-top:8px; font-size:26px; font-weight:600; letter-spacing:-0.01em; color:#f3f3f3;">
               ${escapeHtml(PRODUCT_LABEL[product])} · $${price.toLocaleString()}
             </div>
@@ -165,25 +124,25 @@ export async function POST(request: Request) {
         </tr>
 
         ${section(
-          contactLabel,
+          labelImg("contact"),
           `${escapeHtml(details.name)}<br/>${escapeHtml(details.email)}<br/>${details.company ? escapeHtml(details.company) : `<span style="color:#8a8a8a;">No company given</span>`}`
         )}
 
         ${
           product === "website" && siteType
-            ? section(platformLabel, `${escapeHtml(siteType)} · ${escapeHtml(platform ?? "n/a")}`)
+            ? section(labelImg("platform"), `${escapeHtml(siteType)} · ${escapeHtml(platform ?? "n/a")}`)
             : ""
         }
 
         ${section(
-          brandFileLabel,
+          labelImg("brandFile"),
           details.brandFileName
             ? escapeHtml(details.brandFileName)
             : `<span style="color:#8a8a8a;">None provided</span>`
         )}
 
         ${section(
-          currentProductLabel,
+          labelImg("currentProduct"),
           details.currentProductLink
             ? `<a href="${escapeHtml(details.currentProductLink)}" style="color:#ff8a8a; text-decoration:none;">${escapeHtml(details.currentProductLink)}</a>`
             : details.currentProductFileName
@@ -192,12 +151,12 @@ export async function POST(request: Request) {
         )}
 
         ${section(
-          inspirationLabel,
+          labelImg("inspiration"),
           linkRows || `<span style="color:#8a8a8a;">None provided</span>`
         )}
 
         ${section(
-          notesLabel,
+          labelImg("notes"),
           details.notes
             ? escapeHtml(details.notes).replace(/\n/g, "<br/>")
             : `<span style="color:#8a8a8a;">None provided</span>`
@@ -213,7 +172,7 @@ export async function POST(request: Request) {
               style="display:inline-block; margin:0 auto;"
             />
             <div style="margin-top:14px; text-align:center;">
-              ${footerLabel.replace('style="display:block;"', 'style="display:inline-block;"')}
+              <img src="https://great-escape-five.vercel.app/images/email/labels/footer.png" width="227" height="11" alt="Escape the ordinary" style="display:inline-block;" />
             </div>
           </td>
         </tr>
@@ -221,11 +180,26 @@ export async function POST(request: Request) {
     </div>
   `;
 
+  const text = [
+    `New order: ${PRODUCT_LABEL[product]} · $${price.toLocaleString()}`,
+    `View payment in Stripe: ${dashboardUrl}`,
+    "",
+    `Contact: ${details.name} <${details.email}>${details.company ? ` — ${details.company}` : ""}`,
+    product === "website" && siteType ? `Platform: ${siteType} — ${platform ?? "n/a"}` : "",
+    `Brand file: ${details.brandFileName ?? "None provided"}`,
+    `Current product: ${details.currentProductLink || details.currentProductFileName || "None provided"}`,
+    `Inspiration links: ${details.links.filter((l) => l.trim()).join(", ") || "None provided"}`,
+    `Notes: ${details.notes || "None provided"}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
   const { error: sendError } = await getResend().emails.send({
     from: "great esc. <orders@greatescape.studio>",
     to: ORDER_NOTIFICATION_TO,
     subject: `New order: ${PRODUCT_LABEL[product]} · ${details.name}`,
     html,
+    text,
   });
 
   if (sendError) {
