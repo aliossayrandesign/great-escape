@@ -233,6 +233,7 @@ export async function sendDeliveryEmail(project: Project) {
 }
 
 export async function sendRevisionToStudioEmail(project: Project, message: string, videoUrl: string | null) {
+  const revisionNumber = project.revisionsUsed + 1;
   const html = shell(
     `
       <tr>
@@ -240,6 +241,9 @@ export async function sendRevisionToStudioEmail(project: Project, message: strin
           ${label("New Feedback")}
           <div style="margin-top:8px; font-size:26px; font-weight:600; letter-spacing:-0.01em; color:#f3f3f3;">
             ${escapeHtml(project.clientName)}
+          </div>
+          <div style="margin-top:4px; font-size:14px; color:#a8a8a8;">
+            ${escapeHtml(PRODUCT_LABEL[project.product])} · Revision ${revisionNumber} of 3
           </div>
           <a href="${adminProjectUrl(project.id)}" style="display:inline-block; margin-top:18px; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
             Open in dashboard →
@@ -252,12 +256,19 @@ export async function sendRevisionToStudioEmail(project: Project, message: strin
     false
   );
 
-  const text = [`New feedback from ${project.clientName}`, message, `Dashboard: ${adminProjectUrl(project.id)}`].join("\n");
+  const text = [
+    `New feedback from ${project.clientName} (revision ${revisionNumber} of 3)`,
+    message,
+    videoUrl ? `Video: ${videoUrl}` : "",
+    `Dashboard: ${adminProjectUrl(project.id)}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   await getResend().emails.send({
     from: FROM,
     to: ORDER_NOTIFICATION_TO,
-    subject: `New feedback from ${project.clientName}`,
+    subject: `New feedback from ${project.clientName} · Revision ${revisionNumber} of 3`,
     html,
     text,
   });
@@ -267,27 +278,35 @@ export async function sendStudioUpdateToClientEmail(project: Project, message: s
   const html = shell(
     `
       <tr>
-        <td style="padding:28px 32px 24px;">
-          ${label("Update")}
+        <td style="padding:24px 32px 28px;">
+          ${label("New Update")}
           <div style="margin-top:8px; font-size:22px; font-weight:600; letter-spacing:-0.01em; color:#f3f3f3;">
-            New message on your project
+            Hey ${escapeHtml(project.clientName)} — we replied.
           </div>
-          <a href="${projectUrl(project.id)}" style="display:inline-block; margin-top:18px; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
-            View project →
-          </a>
         </td>
       </tr>
       ${section(label("Message"), escapeHtml(message).replace(/\n/g, "<br/>"))}
+      <tr>
+        <td style="padding:8px 32px 28px;">
+          <a href="${projectUrl(project.id)}" style="display:inline-block; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
+            View your project →
+          </a>
+        </td>
+      </tr>
     `,
-    false
+    true
   );
 
-  const text = [`New message on your project`, message, `View: ${projectUrl(project.id)}`].join("\n");
+  const text = [
+    `Hey ${project.clientName} — we replied to your feedback:`,
+    message,
+    `View your project: ${projectUrl(project.id)}`,
+  ].join("\n");
 
   await getResend().emails.send({
     from: FROM,
     to: project.clientEmail,
-    subject: `Update on your ${PRODUCT_LABEL[project.product]}`,
+    subject: `We replied — ${PRODUCT_LABEL[project.product]} update`,
     html,
     text,
   });
