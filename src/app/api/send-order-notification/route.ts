@@ -100,8 +100,11 @@ export async function POST(request: Request) {
       <table role="presentation" width="100%" style="max-width:560px; margin:0 auto; border-collapse:collapse; background:#141414; border:1px solid #262626; border-radius:20px; overflow:hidden;">
         <tr>
           <td style="padding:28px 32px 24px;">
-            ${label("New Order")}
+            ${label("New Client")}
             <div style="margin-top:8px; font-size:26px; font-weight:600; letter-spacing:-0.01em; color:#f3f3f3;">
+              ${escapeHtml(details.name)}
+            </div>
+            <div style="margin-top:4px; font-size:14px; color:#a8a8a8;">
               ${escapeHtml(PRODUCT_LABEL[product])} · $${price.toLocaleString()}
             </div>
             <a href="${dashboardUrl}" style="display:inline-block; margin-top:18px; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
@@ -112,7 +115,7 @@ export async function POST(request: Request) {
 
         ${section(
           label("Contact"),
-          `${escapeHtml(details.name)}<br/>${escapeHtml(details.email)}<br/>${details.company ? escapeHtml(details.company) : `<span style="color:#8a8a8a;">No company given</span>`}`
+          `${escapeHtml(details.email)}<br/>${details.company ? escapeHtml(details.company) : `<span style="color:#8a8a8a;">No company given</span>`}`
         )}
 
         ${
@@ -149,10 +152,11 @@ export async function POST(request: Request) {
   `;
 
   const text = [
-    `New order: ${PRODUCT_LABEL[product]} · $${price.toLocaleString()}`,
+    `New client: ${details.name}`,
+    `${PRODUCT_LABEL[product]} · $${price.toLocaleString()}`,
     `View payment in Stripe: ${dashboardUrl}`,
     "",
-    `Contact: ${details.name} <${details.email}>${details.company ? ` — ${details.company}` : ""}`,
+    `Contact: ${details.email}${details.company ? ` — ${details.company}` : ""}`,
     product === "website" && siteType ? `Platform: ${siteType} — ${platform ?? "n/a"}` : "",
     `Brand file: ${details.brandFileUrl ?? details.brandFileName ?? "None provided"}`,
     `Current product: ${details.currentProductLink || details.currentProductFileUrl || details.currentProductFileName || "None provided"}`,
@@ -163,9 +167,9 @@ export async function POST(request: Request) {
     .join("\n");
 
   const { error: sendError } = await getResend().emails.send({
-    from: "great esc. <orders@greatescape.studio>",
+    from: "Great Escape <orders@greatescape.studio>",
     to: ORDER_NOTIFICATION_TO,
-    subject: `New order: ${PRODUCT_LABEL[product]} · ${details.name}`,
+    subject: `New client: ${details.name} · ${PRODUCT_LABEL[product]}`,
     html,
     text,
   });

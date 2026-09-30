@@ -195,7 +195,7 @@ export async function POST(request: Request) {
     .join("\n");
 
   const { error: sendError } = await getResend().emails.send({
-    from: "great esc. <orders@greatescape.studio>",
+    from: "Great Escape <orders@greatescape.studio>",
     to: details.email,
     subject: `You're locked in — ${PRODUCT_LABEL[product]}`,
     html,
