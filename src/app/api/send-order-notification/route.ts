@@ -28,26 +28,19 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
-// Most email clients (Gmail especially) strip @font-face CSS, and Gmail
-// additionally refuses to render inline data-URI images altogether. So the
-// site's real DM Mono font can't be loaded as a webfont or embedded inline
-// — these recurring "+ LABEL +" eyebrows are pre-rendered with the real
-// font as plain hosted PNGs instead (see the label-generation script in the
-// project scratchpad), which every client renders identically.
-const LABELS = {
-  newOrder: { file: "new-order", width: 132, alt: "New Order" },
-  contact: { file: "contact", width: 107, alt: "Contact" },
-  platform: { file: "platform", width: 118, alt: "Platform" },
-  brandFile: { file: "brand-file", width: 133, alt: "Brand file" },
-  currentProduct: { file: "current-product", width: 196, alt: "Current product" },
-  inspiration: { file: "inspiration-links", width: 190, alt: "Inspiration links" },
-  notes: { file: "notes", width: 86, alt: "Notes" },
-  footer: { file: "footer", width: 227, alt: "Escape the ordinary" },
+const LABEL_TEXT = {
+  newOrder: "New Order",
+  contact: "Contact",
+  platform: "Platform",
+  brandFile: "Brand file",
+  currentProduct: "Current product",
+  inspiration: "Inspiration links",
+  notes: "Notes",
+  footer: "Escape the ordinary",
 } as const;
 
-function labelImg(key: keyof typeof LABELS) {
-  const { file, width, alt } = LABELS[key];
-  return `<img src="https://great-escape-five.vercel.app/images/email/labels/${file}.png" width="${width}" height="11" alt="${escapeHtml(alt)}" style="display:block;" />`;
+function labelImg(key: keyof typeof LABEL_TEXT, color: string = "#ff8a8a") {
+  return `<div style="font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:${color};">+ ${escapeHtml(LABEL_TEXT[key])} +</div>`;
 }
 
 export async function POST(request: Request) {
@@ -172,7 +165,7 @@ export async function POST(request: Request) {
               style="display:inline-block; margin:0 auto;"
             />
             <div style="margin-top:14px; text-align:center;">
-              <img src="https://great-escape-five.vercel.app/images/email/labels/footer.png" width="227" height="11" alt="Escape the ordinary" style="display:inline-block;" />
+              ${labelImg("footer", "#5a5a5a")}
             </div>
           </td>
         </tr>
