@@ -14,7 +14,7 @@ import { PillButton } from "../ui/PillButton";
 import type { DetailsData } from "./DetailsStep";
 import type { Platform, SiteType } from "./PlatformStep";
 
-async function sendOrderNotification({
+async function createProject({
   paymentIntentId,
   product,
   siteType,
@@ -46,22 +46,19 @@ async function sendOrderNotification({
     },
   });
 
-  // Fire both emails in parallel — the internal heads-up (to us) and the
-  // client-facing confirmation (to them). Neither should block the
-  // customer's success screen on failing; worth alerting on separately,
-  // but not their problem.
-  await Promise.all([
-    fetch("/api/send-order-notification", {
+  // Creates the project record and fires both emails (internal heads-up +
+  // client confirmation) server-side. Shouldn't block the customer's
+  // success screen on failing — worth alerting on separately, but not
+  // their problem.
+  try {
+    await fetch("/api/create-project", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: payload,
-    }).catch(() => console.error("Failed to send internal order notification")),
-    fetch("/api/send-order-confirmation", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: payload,
-    }).catch(() => console.error("Failed to send client order confirmation")),
-  ]);
+    });
+  } catch {
+    console.error("Failed to create project record");
+  }
 }
 
 const APPEARANCE: StripeElementsOptions["appearance"] = {
@@ -173,7 +170,7 @@ function PaymentForm({
     }
 
     if (paymentIntent) {
-      await sendOrderNotification({
+      await createProject({
         paymentIntentId: paymentIntent.id,
         product,
         siteType,
