@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
+import sharp from "sharp";
 import { stripe } from "@/lib/stripe";
 import { getResend, ORDER_NOTIFICATION_TO } from "@/lib/resend";
 import { PRODUCT_LABEL, PRODUCT_PRICE, type ProductType } from "@/lib/products";
@@ -26,6 +29,46 @@ function escapeHtml(value: string) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+// Most email clients (Gmail especially) strip @font-face CSS, so the site's
+// actual DM Mono font can't be loaded as a webfont in the email body. To
+// keep the recurring "+ LABEL +" eyebrows visually consistent with the site
+// anyway, they're rasterized with the real font at request time and
+// embedded as data-URI images — those render identically everywhere,
+// regardless of what the client's CSS sanitizer allows.
+const monoFontBase64 = fs
+  .readFileSync(path.join(process.cwd(), "public/fonts-src/DMMono-Medium.ttf"))
+  .toString("base64");
+
+async function renderMonoLabel(text: string, color: string) {
+  const fontSize = 34;
+  const svg = `
+    <svg width="1000" height="90" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          @font-face {
+            font-family: 'DM Mono Email';
+            src: url(data:font/ttf;base64,${monoFontBase64}) format('truetype');
+          }
+        </style>
+      </defs>
+      <text x="0" y="62" font-family="DM Mono Email" font-size="${fontSize}" letter-spacing="3.5" fill="${color}">${text}</text>
+    </svg>
+  `;
+  const buffer = await sharp(Buffer.from(svg)).png().trim().toBuffer();
+  const meta = await sharp(buffer).metadata();
+  const scale = 1 / 3;
+  return {
+    src: `data:image/png;base64,${buffer.toString("base64")}`,
+    width: Math.round((meta.width ?? 0) * scale),
+    height: Math.round((meta.height ?? 0) * scale),
+  };
+}
+
+async function labelImg(text: string, color: string = "#ff8a8a") {
+  const { src, width, height } = await renderMonoLabel(`+ ${text.toUpperCase()} +`, color);
+  return `<img src="${src}" width="${width}" height="${height}" alt="${escapeHtml(text)}" style="display:block;" />`;
 }
 
 export async function POST(request: Request) {
@@ -64,12 +107,30 @@ export async function POST(request: Request) {
     )
     .join("");
 
-  const section = (label: string, content: string) => `
+  const [
+    newOrderLabel,
+    contactLabel,
+    platformLabel,
+    brandFileLabel,
+    currentProductLabel,
+    inspirationLabel,
+    notesLabel,
+    footerLabel,
+  ] = await Promise.all([
+    labelImg("New Order"),
+    labelImg("Contact"),
+    labelImg("Platform"),
+    labelImg("Brand file"),
+    labelImg("Current product"),
+    labelImg("Inspiration links"),
+    labelImg("Notes"),
+    labelImg("Escape the ordinary", "#5a5a5a"),
+  ]);
+
+  const section = (labelHtml: string, content: string) => `
     <tr>
       <td style="padding:20px 32px; border-top:1px solid #262626;">
-        <div style="font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:#ff8a8a;">
-          + ${escapeHtml(label)} +
-        </div>
+        ${labelHtml}
         <div style="margin-top:8px; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:15px; line-height:1.6; color:#f3f3f3;">
           ${content}
         </div>
@@ -93,9 +154,7 @@ export async function POST(request: Request) {
         </tr>
         <tr>
           <td style="padding:24px 32px 28px;">
-            <div style="font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:#ff8a8a;">
-              + New Order +
-            </div>
+            ${newOrderLabel}
             <div style="margin-top:8px; font-size:26px; font-weight:600; letter-spacing:-0.01em; color:#f3f3f3;">
               ${escapeHtml(PRODUCT_LABEL[product])} · $${price.toLocaleString()}
             </div>
@@ -106,25 +165,25 @@ export async function POST(request: Request) {
         </tr>
 
         ${section(
-          "Contact",
+          contactLabel,
           `${escapeHtml(details.name)}<br/>${escapeHtml(details.email)}<br/>${details.company ? escapeHtml(details.company) : `<span style="color:#8a8a8a;">No company given</span>`}`
         )}
 
         ${
           product === "website" && siteType
-            ? section("Platform", `${escapeHtml(siteType)} · ${escapeHtml(platform ?? "n/a")}`)
+            ? section(platformLabel, `${escapeHtml(siteType)} · ${escapeHtml(platform ?? "n/a")}`)
             : ""
         }
 
         ${section(
-          "Brand file",
+          brandFileLabel,
           details.brandFileName
             ? escapeHtml(details.brandFileName)
             : `<span style="color:#8a8a8a;">None provided</span>`
         )}
 
         ${section(
-          "Current product",
+          currentProductLabel,
           details.currentProductLink
             ? `<a href="${escapeHtml(details.currentProductLink)}" style="color:#ff8a8a; text-decoration:none;">${escapeHtml(details.currentProductLink)}</a>`
             : details.currentProductFileName
@@ -133,12 +192,12 @@ export async function POST(request: Request) {
         )}
 
         ${section(
-          "Inspiration links",
+          inspirationLabel,
           linkRows || `<span style="color:#8a8a8a;">None provided</span>`
         )}
 
         ${section(
-          "Notes",
+          notesLabel,
           details.notes
             ? escapeHtml(details.notes).replace(/\n/g, "<br/>")
             : `<span style="color:#8a8a8a;">None provided</span>`
@@ -153,8 +212,8 @@ export async function POST(request: Request) {
               alt=""
               style="display:inline-block; margin:0 auto;"
             />
-            <div style="margin-top:14px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#5a5a5a;">
-              + Escape the ordinary +
+            <div style="margin-top:14px; text-align:center;">
+              ${footerLabel.replace('style="display:block;"', 'style="display:inline-block;"')}
             </div>
           </td>
         </tr>
