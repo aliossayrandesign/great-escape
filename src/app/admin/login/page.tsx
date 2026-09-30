@@ -3,6 +3,7 @@
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PillButton } from "@/components/ui/PillButton";
+import { SimpleNav } from "@/components/SimpleNav";
 
 function LoginForm() {
   const router = useRouter();
@@ -34,6 +35,7 @@ function LoginForm() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-dark-950 px-6">
+      <SimpleNav />
       <form onSubmit={handleSubmit} className="w-full max-w-sm">
         <p className="font-mono text-xs tracking-[0.15em] text-coral uppercase">
           + Internal +

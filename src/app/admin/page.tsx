@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { listProjects } from "@/lib/projects";
 import { PRODUCT_LABEL } from "@/lib/products";
+import { SimpleNav } from "@/components/SimpleNav";
 
 // Must reflect live database state on every visit — without this, Next
 // would statically generate this page once at build time and bake in
@@ -24,8 +25,9 @@ export default async function AdminDashboardPage() {
   const total = projects.reduce((sum, p) => sum + p.price, 0);
 
   return (
-    <main className="min-h-screen bg-dark-950 px-6 py-16 sm:px-10">
-      <div className="mx-auto max-w-5xl">
+    <main className="min-h-screen bg-dark-950 px-6 pt-[81px] pb-16 sm:px-10 sm:pt-[105px]">
+      <SimpleNav />
+      <div className="mx-auto max-w-5xl py-10">
         <p className="font-mono text-xs tracking-[0.15em] text-coral uppercase">
           + Internal +
         </p>

@@ -4,6 +4,7 @@ import { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { PRODUCT_LABEL, type ProductType } from "@/lib/products";
 import { PillButton } from "@/components/ui/PillButton";
+import { SimpleNav } from "@/components/SimpleNav";
 import { CALENDLY_URL } from "@/lib/site-config";
 
 type Revision = {
@@ -110,6 +111,7 @@ export default function AdminProjectPage({
   if (loading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-dark-950">
+        <SimpleNav />
         <p className="text-paper/40">Loading…</p>
       </main>
     );
@@ -118,14 +120,16 @@ export default function AdminProjectPage({
   if (!project) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-dark-950">
+        <SimpleNav />
         <p className="text-paper/40">Project not found.</p>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-dark-950 px-6 py-16 sm:px-10">
-      <div className="mx-auto max-w-3xl">
+    <main className="min-h-screen bg-dark-950 px-6 pt-[81px] pb-16 sm:px-10 sm:pt-[105px]">
+      <SimpleNav />
+      <div className="mx-auto max-w-3xl py-10">
         <Link href="/admin" className="font-mono text-xs tracking-[0.1em] text-paper/40 uppercase hover:text-paper">
           ‹ All projects
         </Link>

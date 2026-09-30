@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { PRODUCT_LABEL, type ProductType } from "@/lib/products";
 import { PillButton } from "@/components/ui/PillButton";
+import { SimpleNav } from "@/components/SimpleNav";
 import { CALENDLY_URL } from "@/lib/site-config";
 
 type Revision = {
@@ -79,25 +78,10 @@ export default function ClientProjectPage({
     load();
   };
 
-  const Nav = () => (
-    <nav className="fixed inset-x-0 top-0 z-50 flex items-center border-b border-panel-stroke/40 bg-dark-950/70 px-4 py-5 backdrop-blur-md sm:px-8 sm:py-6">
-      <Link href="/" className="flex items-center">
-        <Image
-          src="/images/logo.svg"
-          alt="great escape"
-          width={204}
-          height={39}
-          className="h-[26px] w-auto sm:h-[30px]"
-          priority
-        />
-      </Link>
-    </nav>
-  );
-
   if (loading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-dark-950">
-        <Nav />
+        <SimpleNav />
         <p className="text-paper/40">Loading…</p>
       </main>
     );
@@ -106,7 +90,7 @@ export default function ClientProjectPage({
   if (notFound || !project) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-dark-950 px-6 text-center">
-        <Nav />
+        <SimpleNav />
         <p className="text-paper/60">
           We couldn&apos;t find that project. Double check the link, or reach
           out and we&apos;ll help.
@@ -119,7 +103,7 @@ export default function ClientProjectPage({
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-dark-950 pt-[81px] sm:pt-[105px]">
-      <Nav />
+      <SimpleNav />
       <div
         aria-hidden
         className="pointer-events-none absolute top-[10%] left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full opacity-30 blur-[120px]"
