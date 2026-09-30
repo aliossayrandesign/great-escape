@@ -27,32 +27,39 @@ async function sendOrderNotification({
   platform: Platform | null;
   details: DetailsData;
 }) {
-  try {
-    await fetch("/api/send-order-notification", {
+  const payload = JSON.stringify({
+    paymentIntentId,
+    product,
+    siteType,
+    platform,
+    details: {
+      name: details.name,
+      email: details.email,
+      company: details.company,
+      brandFileName: details.brandFile?.name ?? null,
+      currentProductFileName: details.currentProductFile?.name ?? null,
+      currentProductLink: details.currentProductLink,
+      links: details.links,
+      notes: details.notes,
+    },
+  });
+
+  // Fire both emails in parallel — the internal heads-up (to us) and the
+  // client-facing confirmation (to them). Neither should block the
+  // customer's success screen on failing; worth alerting on separately,
+  // but not their problem.
+  await Promise.all([
+    fetch("/api/send-order-notification", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        paymentIntentId,
-        product,
-        siteType,
-        platform,
-        details: {
-          name: details.name,
-          email: details.email,
-          company: details.company,
-          brandFileName: details.brandFile?.name ?? null,
-          currentProductFileName: details.currentProductFile?.name ?? null,
-          currentProductLink: details.currentProductLink,
-          links: details.links,
-          notes: details.notes,
-        },
-      }),
-    });
-  } catch {
-    // Don't block the customer's success screen on our own notification
-    // failing — worth alerting on separately, but not their problem.
-    console.error("Failed to send order notification");
-  }
+      body: payload,
+    }).catch(() => console.error("Failed to send internal order notification")),
+    fetch("/api/send-order-confirmation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: payload,
+    }).catch(() => console.error("Failed to send client order confirmation")),
+  ]);
 }
 
 const APPEARANCE: StripeElementsOptions["appearance"] = {

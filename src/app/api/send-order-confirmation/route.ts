@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
-import { getResend, ORDER_NOTIFICATION_TO } from "@/lib/resend";
+import { getResend } from "@/lib/resend";
 import { PRODUCT_LABEL, PRODUCT_PRICE, type ProductType } from "@/lib/products";
 
 type OrderPayload = {
@@ -28,14 +28,21 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
-function label(text: string, color: string = "#ff8a8a") {
-  return `<div style="font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:${color};">+ ${escapeHtml(text)} +</div>`;
+const LABEL_TEXT = {
+  confirmed: "Confirmed",
+  contact: "Submitted by",
+  platform: "Platform",
+  brandFile: "Brand file",
+  currentProduct: "Current product",
+  inspiration: "Inspiration links",
+  notes: "Notes",
+  footer: "Escape the ordinary",
+} as const;
+
+function labelImg(key: keyof typeof LABEL_TEXT, color: string = "#ff8a8a") {
+  return `<div style="font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:${color};">+ ${escapeHtml(LABEL_TEXT[key])} +</div>`;
 }
 
-// This is the internal "heads up, a new brief came in" notification — kept
-// plain and scannable since it's operational, not a brand moment. The
-// client-facing confirmation (with the full branded treatment) lives at
-// /api/send-order-confirmation.
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as OrderPayload | null;
 
@@ -62,7 +69,6 @@ export async function POST(request: Request) {
 
   const { details, product, siteType, platform } = body;
   const price = PRODUCT_PRICE[product];
-  const dashboardUrl = `https://dashboard.stripe.com/test/payments/${paymentIntent.id}`;
 
   const linkRows = details.links
     .filter((link) => link.trim())
@@ -87,37 +93,48 @@ export async function POST(request: Request) {
     <div style="background:#0a0a0a; padding:40px 16px; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
       <table role="presentation" width="100%" style="max-width:560px; margin:0 auto; border-collapse:collapse; background:#141414; border:1px solid #262626; border-radius:20px; overflow:hidden;">
         <tr>
-          <td style="padding:28px 32px 24px;">
-            ${label("New Order")}
+          <td style="padding:0;">
+            <img
+              src="https://great-escape-five.vercel.app/images/email/mason-caption.png"
+              width="560"
+              height="313"
+              alt="The work begins…"
+              style="display:block; width:100%; height:auto;"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:24px 32px 28px;">
+            ${labelImg("confirmed")}
             <div style="margin-top:8px; font-size:26px; font-weight:600; letter-spacing:-0.01em; color:#f3f3f3;">
               ${escapeHtml(PRODUCT_LABEL[product])} · $${price.toLocaleString()}
             </div>
-            <a href="${dashboardUrl}" style="display:inline-block; margin-top:18px; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
-              View payment in Stripe →
-            </a>
+            <p style="margin-top:14px; font-size:14px; line-height:1.6; color:#a8a8a8;">
+              First look delivered within 1 week. Up to 3 rounds of revisions included.
+            </p>
           </td>
         </tr>
 
         ${section(
-          label("Contact"),
+          labelImg("contact"),
           `${escapeHtml(details.name)}<br/>${escapeHtml(details.email)}<br/>${details.company ? escapeHtml(details.company) : `<span style="color:#8a8a8a;">No company given</span>`}`
         )}
 
         ${
           product === "website" && siteType
-            ? section(label("Platform"), `${escapeHtml(siteType)} · ${escapeHtml(platform ?? "n/a")}`)
+            ? section(labelImg("platform"), `${escapeHtml(siteType)} · ${escapeHtml(platform ?? "n/a")}`)
             : ""
         }
 
         ${section(
-          label("Brand file"),
+          labelImg("brandFile"),
           details.brandFileName
             ? escapeHtml(details.brandFileName)
             : `<span style="color:#8a8a8a;">None provided</span>`
         )}
 
         ${section(
-          label("Current product"),
+          labelImg("currentProduct"),
           details.currentProductLink
             ? `<a href="${escapeHtml(details.currentProductLink)}" style="color:#ff8a8a; text-decoration:none;">${escapeHtml(details.currentProductLink)}</a>`
             : details.currentProductFileName
@@ -126,25 +143,40 @@ export async function POST(request: Request) {
         )}
 
         ${section(
-          label("Inspiration links"),
+          labelImg("inspiration"),
           linkRows || `<span style="color:#8a8a8a;">None provided</span>`
         )}
 
         ${section(
-          label("Notes"),
+          labelImg("notes"),
           details.notes
             ? escapeHtml(details.notes).replace(/\n/g, "<br/>")
             : `<span style="color:#8a8a8a;">None provided</span>`
         )}
+
+        <tr>
+          <td style="padding:28px 32px 32px; border-top:1px solid #262626; text-align:center;">
+            <img
+              src="https://great-escape-five.vercel.app/images/email/brandmark.png"
+              width="30"
+              height="44"
+              alt=""
+              style="display:inline-block; margin:0 auto;"
+            />
+            <div style="margin-top:14px; text-align:center;">
+              ${labelImg("footer", "#5a5a5a")}
+            </div>
+          </td>
+        </tr>
       </table>
     </div>
   `;
 
   const text = [
-    `New order: ${PRODUCT_LABEL[product]} · $${price.toLocaleString()}`,
-    `View payment in Stripe: ${dashboardUrl}`,
+    `Confirmed: ${PRODUCT_LABEL[product]} · $${price.toLocaleString()}`,
+    `First look delivered within 1 week. Up to 3 rounds of revisions included.`,
     "",
-    `Contact: ${details.name} <${details.email}>${details.company ? ` — ${details.company}` : ""}`,
+    `Submitted by: ${details.name} <${details.email}>${details.company ? ` — ${details.company}` : ""}`,
     product === "website" && siteType ? `Platform: ${siteType} — ${platform ?? "n/a"}` : "",
     `Brand file: ${details.brandFileName ?? "None provided"}`,
     `Current product: ${details.currentProductLink || details.currentProductFileName || "None provided"}`,
@@ -156,16 +188,16 @@ export async function POST(request: Request) {
 
   const { error: sendError } = await getResend().emails.send({
     from: "great esc. <orders@greatescape.studio>",
-    to: ORDER_NOTIFICATION_TO,
-    subject: `New order: ${PRODUCT_LABEL[product]} · ${details.name}`,
+    to: details.email,
+    subject: `You're locked in — ${PRODUCT_LABEL[product]}`,
     html,
     text,
   });
 
   if (sendError) {
-    console.error("Resend failed to send order notification:", sendError);
+    console.error("Resend failed to send order confirmation:", sendError);
     return NextResponse.json(
-      { error: "Failed to send notification email" },
+      { error: "Failed to send confirmation email" },
       { status: 502 }
     );
   }
