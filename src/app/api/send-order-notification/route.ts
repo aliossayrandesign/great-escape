@@ -94,7 +94,7 @@ export async function POST(request: Request) {
   `;
 
   const { error: sendError } = await getResend().emails.send({
-    from: "great esc. <onboarding@resend.dev>",
+    from: "great esc. <orders@greatescape.studio>",
     to: ORDER_NOTIFICATION_TO,
     subject: `New order: ${PRODUCT_LABEL[product]} — ${details.name}`,
     html,
