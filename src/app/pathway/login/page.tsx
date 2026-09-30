@@ -29,7 +29,7 @@ function LoginForm() {
       return;
     }
 
-    router.push(searchParams.get("from") || "/admin");
+    router.push(searchParams.get("from") || "/pathway");
     router.refresh();
   };
 

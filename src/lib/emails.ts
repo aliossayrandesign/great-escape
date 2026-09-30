@@ -12,7 +12,7 @@ export function projectUrl(id: string) {
 }
 
 export function adminProjectUrl(id: string) {
-  return `${SITE_URL}/admin/projects/${id}`;
+  return `${SITE_URL}/pathway/projects/${id}`;
 }
 
 export function escapeHtml(value: string) {

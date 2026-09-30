@@ -65,7 +65,7 @@ export default async function AdminDashboardPage() {
                 >
                   <td className="px-5 py-4">
                     <Link
-                      href={`/admin/projects/${project.id}`}
+                      href={`/pathway/projects/${project.id}`}
                       className="font-medium hover:text-coral"
                     >
                       {project.clientName}

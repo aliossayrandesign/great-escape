@@ -130,7 +130,7 @@ export default function AdminProjectPage({
     <main className="min-h-screen bg-dark-950 px-6 pt-[81px] pb-16 sm:px-10 sm:pt-[105px]">
       <SimpleNav />
       <div className="mx-auto max-w-3xl py-10">
-        <Link href="/admin" className="font-mono text-xs tracking-[0.1em] text-paper/40 uppercase hover:text-paper">
+        <Link href="/pathway" className="font-mono text-xs tracking-[0.1em] text-paper/40 uppercase hover:text-paper">
           ‹ All projects
         </Link>
 

@@ -1,10 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-// Guards every /admin page (not the API routes — those check the cookie or
+// Guards every /pathway page (not the API routes — those check the cookie or
 // password themselves) except the login page. No accounts, just a single
 // shared password compared against the session cookie set at login.
 export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname === "/admin/login") {
+  if (request.nextUrl.pathname === "/pathway/login") {
     return NextResponse.next();
   }
 
@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
   const adminPassword = process.env.ADMIN_PASSWORD;
 
   if (!adminPassword || session !== adminPassword) {
-    const loginUrl = new URL("/admin/login", request.url);
+    const loginUrl = new URL("/pathway/login", request.url);
     loginUrl.searchParams.set("from", request.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
   }
@@ -21,5 +21,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/admin/:path*",
+  matcher: "/pathway/:path*",
 };
