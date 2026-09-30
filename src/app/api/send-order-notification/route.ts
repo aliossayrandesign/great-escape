@@ -58,45 +58,114 @@ export async function POST(request: Request) {
 
   const linkRows = details.links
     .filter((link) => link.trim())
-    .map((link) => `<li>${escapeHtml(link)}</li>`)
+    .map(
+      (link) =>
+        `<div style="margin-top:6px;"><a href="${escapeHtml(link)}" style="color:#ff8a8a; text-decoration:none; font-size:14px;">${escapeHtml(link)}</a></div>`
+    )
     .join("");
 
+  const section = (label: string, content: string) => `
+    <tr>
+      <td style="padding:20px 32px; border-top:1px solid #262626;">
+        <div style="font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:#ff8a8a;">
+          + ${escapeHtml(label)} +
+        </div>
+        <div style="margin-top:8px; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:15px; line-height:1.6; color:#f3f3f3;">
+          ${content}
+        </div>
+      </td>
+    </tr>
+  `;
+
   const html = `
-    <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto;">
-      <h2>New order — ${escapeHtml(PRODUCT_LABEL[product])} ($${price.toLocaleString()})</h2>
-      <p><a href="${dashboardUrl}">View payment in Stripe →</a></p>
+    <div style="background:#0a0a0a; padding:40px 16px; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+      <table role="presentation" width="100%" style="max-width:560px; margin:0 auto; border-collapse:collapse; background:#141414; border:1px solid #262626; border-radius:20px; overflow:hidden;">
+        <tr>
+          <td style="padding:0;">
+            <img
+              src="https://great-escape-five.vercel.app/images/email/mason-caption.png"
+              width="560"
+              height="313"
+              alt="The work begins…"
+              style="display:block; width:100%; height:auto;"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:24px 32px 28px;">
+            <div style="font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:#ff8a8a;">
+              + New Order +
+            </div>
+            <div style="margin-top:8px; font-size:26px; font-weight:600; letter-spacing:-0.01em; color:#f3f3f3;">
+              ${escapeHtml(PRODUCT_LABEL[product])} · $${price.toLocaleString()}
+            </div>
+            <a href="${dashboardUrl}" style="display:inline-block; margin-top:18px; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
+              View payment in Stripe →
+            </a>
+          </td>
+        </tr>
 
-      <h3>Contact</h3>
-      <p>
-        ${escapeHtml(details.name)}<br/>
-        ${escapeHtml(details.email)}<br/>
-        ${details.company ? escapeHtml(details.company) : "<em>No company given</em>"}
-      </p>
+        ${section(
+          "Contact",
+          `${escapeHtml(details.name)}<br/>${escapeHtml(details.email)}<br/>${details.company ? escapeHtml(details.company) : `<span style="color:#8a8a8a;">No company given</span>`}`
+        )}
 
-      ${
-        product === "website" && siteType
-          ? `<h3>Platform</h3><p>${escapeHtml(siteType)} — ${escapeHtml(platform ?? "n/a")}</p>`
-          : ""
-      }
+        ${
+          product === "website" && siteType
+            ? section("Platform", `${escapeHtml(siteType)} · ${escapeHtml(platform ?? "n/a")}`)
+            : ""
+        }
 
-      <h3>Brand file</h3>
-      <p>${details.brandFileName ? escapeHtml(details.brandFileName) + " (uploaded — file attachments coming soon, ask customer to resend for now)" : "None provided"}</p>
+        ${section(
+          "Brand file",
+          details.brandFileName
+            ? escapeHtml(details.brandFileName)
+            : `<span style="color:#8a8a8a;">None provided</span>`
+        )}
 
-      <h3>Current product</h3>
-      <p>${details.currentProductLink ? `<a href="${escapeHtml(details.currentProductLink)}">${escapeHtml(details.currentProductLink)}</a>` : details.currentProductFileName ? escapeHtml(details.currentProductFileName) + " (file attachments coming soon)" : "None provided"}</p>
+        ${section(
+          "Current product",
+          details.currentProductLink
+            ? `<a href="${escapeHtml(details.currentProductLink)}" style="color:#ff8a8a; text-decoration:none;">${escapeHtml(details.currentProductLink)}</a>`
+            : details.currentProductFileName
+              ? `${escapeHtml(details.currentProductFileName)} <span style="color:#8a8a8a;">(file attachments coming soon)</span>`
+              : `<span style="color:#8a8a8a;">None provided</span>`
+        )}
 
-      <h3>Inspiration links</h3>
-      ${linkRows ? `<ul>${linkRows}</ul>` : "<p>None provided</p>"}
+        ${section(
+          "Inspiration links",
+          linkRows || `<span style="color:#8a8a8a;">None provided</span>`
+        )}
 
-      <h3>Notes</h3>
-      <p>${details.notes ? escapeHtml(details.notes).replace(/\n/g, "<br/>") : "None provided"}</p>
+        ${section(
+          "Notes",
+          details.notes
+            ? escapeHtml(details.notes).replace(/\n/g, "<br/>")
+            : `<span style="color:#8a8a8a;">None provided</span>`
+        )}
+
+        <tr>
+          <td style="padding:28px 32px 32px; border-top:1px solid #262626; text-align:center;">
+            <img
+              src="https://great-escape-five.vercel.app/images/email/brandmark.png"
+              width="30"
+              height="44"
+              alt=""
+              style="display:inline-block; margin:0 auto;"
+            />
+            <div style="margin-top:14px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#5a5a5a;">
+              + Escape the ordinary +
+            </div>
+          </td>
+        </tr>
+      </table>
     </div>
   `;
 
   const { error: sendError } = await getResend().emails.send({
     from: "great esc. <orders@greatescape.studio>",
     to: ORDER_NOTIFICATION_TO,
-    subject: `New order: ${PRODUCT_LABEL[product]} — ${details.name}`,
+    subject: `New order: ${PRODUCT_LABEL[product]} · ${details.name}`,
     html,
   });
 
