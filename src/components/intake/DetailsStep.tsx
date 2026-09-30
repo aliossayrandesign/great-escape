@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { upload } from "@vercel/blob/client";
 import { PillButton } from "../ui/PillButton";
 
 export type DetailsData = {
@@ -8,11 +9,15 @@ export type DetailsData = {
   email: string;
   company: string;
   brandFile: File | null;
+  brandFileUrl: string | null;
   currentProductFile: File | null;
+  currentProductFileUrl: string | null;
   currentProductLink: string;
   links: string[];
   notes: string;
 };
+
+type UploadState = "idle" | "uploading" | "done" | "error";
 
 export function DetailsStep({
   initial,
@@ -27,9 +32,20 @@ export function DetailsStep({
   const [email, setEmail] = useState(initial.email);
   const [company, setCompany] = useState(initial.company);
   const [brandFile, setBrandFile] = useState<File | null>(initial.brandFile);
+  const [brandFileUrl, setBrandFileUrl] = useState<string | null>(
+    initial.brandFileUrl
+  );
+  const [brandUploadState, setBrandUploadState] = useState<UploadState>(
+    initial.brandFileUrl ? "done" : "idle"
+  );
   const [currentProductFile, setCurrentProductFile] = useState<File | null>(
     initial.currentProductFile
   );
+  const [currentProductFileUrl, setCurrentProductFileUrl] = useState<
+    string | null
+  >(initial.currentProductFileUrl);
+  const [currentProductUploadState, setCurrentProductUploadState] =
+    useState<UploadState>(initial.currentProductFileUrl ? "done" : "idle");
   const [currentProductLink, setCurrentProductLink] = useState(
     initial.currentProductLink
   );
@@ -77,11 +93,31 @@ export function DetailsStep({
     setLinks((prev) => prev.filter((_, i) => i !== index));
 
   const handleFiles = (files: FileList | null) => {
-    if (files && files[0]) setBrandFile(files[0]);
+    const file = files?.[0];
+    if (!file) return;
+    setBrandFile(file);
+    setBrandFileUrl(null);
+    setBrandUploadState("uploading");
+    upload(file.name, file, { access: "public", handleUploadUrl: "/api/upload" })
+      .then((blob) => {
+        setBrandFileUrl(blob.url);
+        setBrandUploadState("done");
+      })
+      .catch(() => setBrandUploadState("error"));
   };
 
   const handleCurrentProductFiles = (files: FileList | null) => {
-    if (files && files[0]) setCurrentProductFile(files[0]);
+    const file = files?.[0];
+    if (!file) return;
+    setCurrentProductFile(file);
+    setCurrentProductFileUrl(null);
+    setCurrentProductUploadState("uploading");
+    upload(file.name, file, { access: "public", handleUploadUrl: "/api/upload" })
+      .then((blob) => {
+        setCurrentProductFileUrl(blob.url);
+        setCurrentProductUploadState("done");
+      })
+      .catch(() => setCurrentProductUploadState("error"));
   };
 
   return (
@@ -161,6 +197,16 @@ export function DetailsStep({
             <p className="text-balance text-lg font-semibold">
               {brandFile ? brandFile.name : "Drop your brand file here"}
             </p>
+            {brandUploadState === "uploading" && (
+              <p className="font-mono text-xs tracking-[0.1em] text-dark-400 uppercase">
+                Uploading…
+              </p>
+            )}
+            {brandUploadState === "error" && (
+              <p className="font-mono text-xs tracking-[0.1em] text-coral uppercase">
+                Upload failed — try again
+              </p>
+            )}
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
@@ -201,6 +247,16 @@ export function DetailsStep({
                 ? currentProductFile.name
                 : "Have an existing site, app, or deck?"}
             </p>
+            {currentProductUploadState === "uploading" && (
+              <p className="font-mono text-xs tracking-[0.1em] text-dark-400 uppercase">
+                Uploading…
+              </p>
+            )}
+            {currentProductUploadState === "error" && (
+              <p className="font-mono text-xs tracking-[0.1em] text-coral uppercase">
+                Upload failed — try again
+              </p>
+            )}
             <button
               type="button"
               onClick={() => currentProductInputRef.current?.click()}
@@ -271,17 +327,29 @@ export function DetailsStep({
           />
         </div>
 
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex flex-col items-end gap-2">
+          {(brandUploadState === "uploading" ||
+            currentProductUploadState === "uploading") && (
+            <p className="font-mono text-xs tracking-[0.1em] text-dark-400 uppercase">
+              Finishing upload…
+            </p>
+          )}
           <PillButton
             size="xl"
             variant="paper"
+            disabled={
+              brandUploadState === "uploading" ||
+              currentProductUploadState === "uploading"
+            }
             onClick={() =>
               onContinue({
                 name,
                 email,
                 company,
                 brandFile,
+                brandFileUrl,
                 currentProductFile,
+                currentProductFileUrl,
                 currentProductLink,
                 links,
                 notes,

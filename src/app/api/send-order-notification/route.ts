@@ -13,12 +13,24 @@ type OrderPayload = {
     email: string;
     company: string;
     brandFileName: string | null;
+    brandFileUrl: string | null;
     currentProductFileName: string | null;
+    currentProductFileUrl: string | null;
     currentProductLink: string;
     links: string[];
     notes: string;
   };
 };
+
+function fileLink(name: string | null, url: string | null) {
+  if (url) {
+    return `<a href="${url}" style="color:#ff8a8a; text-decoration:none;">${escapeHtml(name ?? "Download file")} →</a>`;
+  }
+  if (name) {
+    return `${escapeHtml(name)} <span style="color:#8a8a8a;">(upload didn't finish — ask the customer to resend)</span>`;
+  }
+  return `<span style="color:#8a8a8a;">None provided</span>`;
+}
 
 function escapeHtml(value: string) {
   return value
@@ -111,18 +123,14 @@ export async function POST(request: Request) {
 
         ${section(
           label("Brand file"),
-          details.brandFileName
-            ? escapeHtml(details.brandFileName)
-            : `<span style="color:#8a8a8a;">None provided</span>`
+          fileLink(details.brandFileName, details.brandFileUrl)
         )}
 
         ${section(
           label("Current product"),
           details.currentProductLink
             ? `<a href="${escapeHtml(details.currentProductLink)}" style="color:#ff8a8a; text-decoration:none;">${escapeHtml(details.currentProductLink)}</a>`
-            : details.currentProductFileName
-              ? `${escapeHtml(details.currentProductFileName)} <span style="color:#8a8a8a;">(file attachments coming soon)</span>`
-              : `<span style="color:#8a8a8a;">None provided</span>`
+            : fileLink(details.currentProductFileName, details.currentProductFileUrl)
         )}
 
         ${section(
@@ -146,8 +154,8 @@ export async function POST(request: Request) {
     "",
     `Contact: ${details.name} <${details.email}>${details.company ? ` — ${details.company}` : ""}`,
     product === "website" && siteType ? `Platform: ${siteType} — ${platform ?? "n/a"}` : "",
-    `Brand file: ${details.brandFileName ?? "None provided"}`,
-    `Current product: ${details.currentProductLink || details.currentProductFileName || "None provided"}`,
+    `Brand file: ${details.brandFileUrl ?? details.brandFileName ?? "None provided"}`,
+    `Current product: ${details.currentProductLink || details.currentProductFileUrl || details.currentProductFileName || "None provided"}`,
     `Inspiration links: ${details.links.filter((l) => l.trim()).join(", ") || "None provided"}`,
     `Notes: ${details.notes || "None provided"}`,
   ]
