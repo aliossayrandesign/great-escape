@@ -51,9 +51,8 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mt-6 max-w-md text-pretty text-base text-paper/70 sm:text-lg"
             >
-              Tell us your product, drop your inspo links, and get back a
-              fully designed website, app, or pitch deck. No meetings, no
-              back-and-forth — just a polished product.
+              Ordinary doesn&apos;t get a second look. We design the way
+              out. Fully designed, ready to ship.
             </motion.p>
 
             <motion.div

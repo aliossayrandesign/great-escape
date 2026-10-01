@@ -8,21 +8,21 @@ const STEPS = [
     number: "01",
     title: "Give us the brief",
     description:
-      "Pick your product, drop a few inspiration links, and brief us in your own words. Takes about two minutes.",
+      "Tell us what you're building, who it's for, and what it should feel like. We'll take it from there.",
     image: "/images/process-01-v4.png",
   },
   {
     number: "02",
     title: "We build it",
     description:
-      "Our designers get to work. Website, app, or deck — done right, not just done fast.",
+      "Built around your brand, not a template. Done right, not just done fast.",
     image: "/images/process-02-v5.png",
   },
   {
     number: "03",
     title: "Your finished product",
     description:
-      "Get a polished, ready-to-use product back in your inbox. No meetings, no back-and-forth.",
+      "A launch-ready product built to help you win, not just look good.",
     image: "/images/process-03-v12.png",
     accent: true,
   },

@@ -9,7 +9,7 @@ const PLANS = [
   {
     id: "website",
     title: "Website",
-    description: "A full marketing site — home, pages, and everything in between.",
+    description: "A full site, built around your business, not a template.",
   },
   {
     id: "app",
@@ -19,7 +19,7 @@ const PLANS = [
   {
     id: "package",
     title: "Package Design",
-    description: "Label or packaging design for a single product.",
+    description: "Label or packaging design for your product(s).",
   },
   {
     id: "deck",

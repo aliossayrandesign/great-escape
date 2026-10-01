@@ -24,9 +24,9 @@ const PRODUCTS = [
     id: "website",
     number: "01",
     title: "Website",
-    tagline: "A site that looks like your best day, every day.",
+    tagline: "A site built to convert, not just exist.",
     description:
-      "Home, product, pricing, about, contact — a full marketing site laid out to convert, not just decorate, and written to sound like you.",
+      "Clear about what you do, confident about why it matters, easy to say yes to.",
     included: [
       "Home + up to 5 core pages",
       "Responsive across every device",
@@ -43,7 +43,7 @@ const PRODUCTS = [
     title: "App",
     tagline: "Every screen your product needs, mapped and designed.",
     description:
-      "From first open to your core loop — onboarding, empty states, edge cases — the full experience designed with the same care as the happy path.",
+      "From first open to your core loop — onboarding, empty states, edge cases — the full experience, designed with the same care all the way through.",
     included: [
       "Onboarding + core product flows",
       "Every state: empty, loading, error",
@@ -60,7 +60,7 @@ const PRODUCTS = [
     title: "Package Design",
     tagline: "A label that sells itself off the shelf.",
     description:
-      "Can, bottle, or box — a complete label system designed around your brand, built to actual print specs so it goes straight to your printer without a round of fixes.",
+      "A complete label system designed around your brand, built to actual print specs so it goes straight to your printer.",
     included: [
       "Print-ready dieline & label design",
       "Delivered as a print-ready Adobe Illustrator (.ai) file",
@@ -76,7 +76,7 @@ const PRODUCTS = [
     title: "Pitch Deck",
     tagline: "The story that gets you the yes.",
     description:
-      "Problem, solution, traction, ask — a narrative deck designed to hold a room's attention for the two minutes that decide everything.",
+      "Built to hold a room's attention long enough to get the yes.",
     included: [
       "12–15 slide narrative deck",
       "Custom charts & data visuals",

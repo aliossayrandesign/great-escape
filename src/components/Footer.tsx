@@ -24,8 +24,7 @@ export function Footer() {
             />
           </Link>
           <p className="max-w-xs text-pretty text-sm text-paper/50">
-            A creative studio — one brief, one week, one fully
-            designed escape.
+            Creative Studio based in Los Angeles, CA.
           </p>
         </div>
 

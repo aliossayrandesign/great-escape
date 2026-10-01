@@ -25,8 +25,7 @@ export function CaseStudyTeaser() {
               See a real brief become a finished site.
             </h2>
             <p className="mt-3 max-w-md text-pretty text-paper/60 sm:text-lg">
-              The exact intake we received, and exactly what shipped from it
-              — watch it happen.
+              The exact intake we received, and exactly what shipped from it.
             </p>
             <span className="mt-6 inline-flex items-center gap-2 font-mono text-xs tracking-[0.15em] text-paper/80 uppercase">
               Watch it ship
