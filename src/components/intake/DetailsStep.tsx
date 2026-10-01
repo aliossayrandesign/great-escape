@@ -55,8 +55,18 @@ export function DetailsStep({
   const [notes, setNotes] = useState(initial.notes);
   const [isDragging, setIsDragging] = useState(false);
   const [isDraggingCurrent, setIsDraggingCurrent] = useState(false);
+  const [showValidation, setShowValidation] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const currentProductInputRef = useRef<HTMLInputElement>(null);
+
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const missingContact = !name.trim() || !emailValid;
+  const missingBrief =
+    !notes.trim() &&
+    !links.some((l) => l.trim()) &&
+    !brandFile &&
+    !currentProductFile &&
+    !currentProductLink.trim();
 
   useEffect(() => {
     onDirtyChange?.(
@@ -334,6 +344,15 @@ export function DetailsStep({
               Finishing upload…
             </p>
           )}
+          {showValidation && (missingContact || missingBrief) && (
+            <p className="text-balance text-right text-sm text-coral">
+              {missingContact && missingBrief
+                ? "Add your name and email, and at least one link, file, or note about your product."
+                : missingContact
+                  ? "Add your name and email to continue."
+                  : "Give us at least one inspiration link, file, or note about your product."}
+            </p>
+          )}
           <PillButton
             size="xl"
             variant="paper"
@@ -341,7 +360,11 @@ export function DetailsStep({
               brandUploadState === "uploading" ||
               currentProductUploadState === "uploading"
             }
-            onClick={() =>
+            onClick={() => {
+              if (missingContact || missingBrief) {
+                setShowValidation(true);
+                return;
+              }
               onContinue({
                 name,
                 email,
@@ -353,8 +376,8 @@ export function DetailsStep({
                 currentProductLink,
                 links,
                 notes,
-              })
-            }
+              });
+            }}
             className="h-14 whitespace-nowrap"
           >
             Continue to payment →
