@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
+import Image from "next/image";
 import { PRODUCT_LABEL, type ProductType } from "@/lib/products";
 import { PillButton } from "@/components/ui/PillButton";
 import { SimpleNav } from "@/components/SimpleNav";
@@ -107,13 +108,22 @@ export default function ClientProjectPage({
   return (
     <main className="relative min-h-screen overflow-hidden bg-dark-950 pt-[81px] sm:pt-[105px]">
       <SimpleNav />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute top-[10%] left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full opacity-30 blur-[120px]"
-        style={{
-          background: "radial-gradient(circle, rgba(255,138,138,0.35), transparent 70%)",
-        }}
-      />
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <Image
+          src="/images/atmosphere.png"
+          alt=""
+          fill
+          className="object-cover opacity-20"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-dark-950/70" />
+        <div
+          className="absolute top-[10%] left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full opacity-30 blur-[120px]"
+          style={{
+            background: "radial-gradient(circle, rgba(255,138,138,0.35), transparent 70%)",
+          }}
+        />
+      </div>
 
       <div className="relative mx-auto max-w-2xl px-6 py-16 sm:px-10">
         <p className="font-mono text-xs tracking-[0.15em] text-coral uppercase">
