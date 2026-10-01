@@ -31,7 +31,7 @@ export function Hero() {
             className="inline-flex w-fit items-center gap-2 font-mono text-xs tracking-[0.2em] text-coral"
           >
             <span>+</span>
-            <span>AI POWERED CREATIVE STUDIO</span>
+            <span>CREATIVE STUDIO</span>
             <span>+</span>
           </motion.div>
 

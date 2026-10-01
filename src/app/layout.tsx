@@ -17,7 +17,7 @@ const dmMono = DM_Mono({
 export const metadata: Metadata = {
   title: "great esc.",
   description:
-    "An automated creative studio — tell us your product, drop your inspo, and escape with a fully designed website, app, or pitch deck.",
+    "A creative studio — tell us your product, drop your inspo, and escape with a fully designed website, app, or pitch deck.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

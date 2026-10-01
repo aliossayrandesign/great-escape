@@ -24,7 +24,7 @@ export function Footer() {
             />
           </Link>
           <p className="max-w-xs text-pretty text-sm text-paper/50">
-            An automated creative studio — one brief, one week, one fully
+            A creative studio — one brief, one week, one fully
             designed escape.
           </p>
         </div>

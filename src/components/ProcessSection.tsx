@@ -15,7 +15,7 @@ const STEPS = [
     number: "02",
     title: "We build it",
     description:
-      "An automated first pass, refined by a real designer. Website, app, or deck — done right, not just done fast.",
+      "Our designers get to work. Website, app, or deck — done right, not just done fast.",
     image: "/images/process-02-v5.png",
   },
   {
