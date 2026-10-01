@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { upload } from "@vercel/blob/client";
 import { PillButton } from "../ui/PillButton";
 import type { ProductType } from "@/lib/products";
+import { CALENDLY_URL } from "@/lib/site-config";
 
 export type DetailsData = {
   name: string;
@@ -203,6 +204,14 @@ export function DetailsStep({
           love, and tell us about your product. We&apos;ll take it from
           there.
         </p>
+        <a
+          href={CALENDLY_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3 inline-block font-mono text-xs tracking-[0.1em] text-coral uppercase hover:underline"
+        >
+          Prefer to talk it through? Book a call →
+        </a>
       </div>
 
       <div className="mt-12">

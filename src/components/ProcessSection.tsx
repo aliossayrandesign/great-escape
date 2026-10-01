@@ -22,7 +22,7 @@ const STEPS = [
     number: "03",
     title: "Your finished product",
     description:
-      "Get a polished, ready-to-use product back in your inbox. No meetings, no back-and-forth, no decks of decks.",
+      "Get a polished, ready-to-use product back in your inbox. No meetings, no back-and-forth.",
     image: "/images/process-03-v12.png",
     accent: true,
   },
