@@ -29,6 +29,9 @@ export default async function AdminDashboardPage() {
     })
     .reduce((sum, p) => sum + p.price, 0);
   const allTimeTotal = projects.reduce((sum, p) => sum + p.price, 0);
+  const outstandingBalance = projects
+    .filter((p) => !p.balancePaidAt)
+    .reduce((sum, p) => sum + p.balanceAmount, 0);
 
   return (
     <main className="min-h-screen bg-dark-950 px-6 pt-[81px] pb-16 sm:px-10 sm:pt-[105px]">
@@ -41,7 +44,7 @@ export default async function AdminDashboardPage() {
           Projects
         </h1>
 
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
           <div className="rounded-[16px] border border-panel-stroke bg-dark-900/40 p-5">
             <p className="font-mono text-[10px] tracking-[0.15em] text-dark-400 uppercase">
               This month
@@ -56,6 +59,14 @@ export default async function AdminDashboardPage() {
             </p>
             <p className="mt-2 text-2xl font-semibold">
               ${allTimeTotal.toLocaleString()}
+            </p>
+          </div>
+          <div className="rounded-[16px] border border-panel-stroke bg-dark-900/40 p-5">
+            <p className="font-mono text-[10px] tracking-[0.15em] text-dark-400 uppercase">
+              Outstanding
+            </p>
+            <p className="mt-2 text-2xl font-semibold">
+              ${outstandingBalance.toLocaleString()}
             </p>
           </div>
           <div className="rounded-[16px] border border-panel-stroke bg-dark-900/40 p-5">

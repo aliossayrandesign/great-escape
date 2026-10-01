@@ -47,16 +47,22 @@ export async function POST(request: Request) {
 
   const { details, product, siteType, platform, skuCount } = body;
 
+  // totalPrice comes from the metadata set when the deposit PaymentIntent was
+  // created — the actual Stripe charge (paymentIntent.amount) is only the
+  // deposit (half), not the total project price.
+  const totalPrice = Number(paymentIntent.metadata?.totalPrice) || paymentIntent.amount / 100;
+  const depositAmount = paymentIntent.amount / 100;
+  const balanceAmount = totalPrice - depositAmount;
+
   const project = await createProject({
     clientName: details.name,
     clientEmail: details.email,
     company: details.company || null,
     product,
-    // Store what Stripe actually charged, not a re-derived lookup — this
-    // stays correct even for variable pricing (e.g. package design scales
-    // with SKU count) and can never drift from the real charge.
-    price: paymentIntent.amount / 100,
+    price: totalPrice,
     stripePaymentIntentId: paymentIntent.id,
+    depositAmount,
+    balanceAmount,
     brandFileName: details.brandFileName,
     brandFileUrl: details.brandFileUrl,
     currentProductLink: details.currentProductLink || null,

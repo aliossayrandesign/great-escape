@@ -1,8 +1,17 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
-import { createProject, getProjectByPaymentIntentId } from "@/lib/projects";
-import { sendClientConfirmationEmail, sendInternalNotificationEmail } from "@/lib/emails";
+import {
+  createProject,
+  getProject,
+  getProjectByPaymentIntentId,
+  markBalancePaid,
+} from "@/lib/projects";
+import {
+  sendClientConfirmationEmail,
+  sendInternalNotificationEmail,
+  sendBalancePaidEmail,
+} from "@/lib/emails";
 import { parsePaymentMetadata } from "@/lib/payment-metadata";
 import type { ProductType } from "@/lib/products";
 
@@ -39,6 +48,34 @@ export async function POST(request: Request) {
 
   const paymentIntent = event.data.object as Stripe.PaymentIntent;
 
+  if (paymentIntent.metadata?.kind === "balance") {
+    const projectId = paymentIntent.metadata.projectId;
+    try {
+      const project = projectId ? await getProject(projectId) : null;
+      if (!project) {
+        console.error("Stripe webhook: balance payment for unknown project", projectId);
+        return NextResponse.json({ ok: true, skipped: "unknown project" });
+      }
+      const alreadyPaid = Boolean(project.balancePaidAt);
+      await markBalancePaid(project.id);
+      if (!alreadyPaid) {
+        const updated = await getProject(project.id);
+        if (updated) {
+          await sendBalancePaidEmail(updated).catch((err) =>
+            console.error("Webhook fallback: failed to send balance-paid email", err)
+          );
+        }
+        console.warn(
+          `Stripe webhook marked balance paid as a fallback for project ${project.id}, payment intent ${paymentIntent.id}`
+        );
+      }
+      return NextResponse.json({ ok: true, balancePaid: project.id });
+    } catch (error) {
+      console.error("Stripe webhook: failed to process balance payment", error);
+      return NextResponse.json({ error: "Processing failed" }, { status: 500 });
+    }
+  }
+
   try {
     const existing = await getProjectByPaymentIntentId(paymentIntent.id);
     if (existing) {
@@ -54,16 +91,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true, skipped: "no product metadata" });
     }
 
+    // totalPrice comes from metadata set when the deposit PaymentIntent was
+    // created — paymentIntent.amount is only the deposit (half), not the
+    // total project price. Matches /api/create-project's approach.
+    const depositAmount = paymentIntent.amount / 100;
+    const totalPrice = parsed.totalPrice || depositAmount;
+    const balanceAmount = totalPrice - depositAmount;
+
     const project = await createProject({
       clientName: parsed.name,
       clientEmail: parsed.email,
       company: parsed.company,
       product: parsed.product,
-      // Use what Stripe actually charged, not a re-derived lookup — stays
-      // correct for variable pricing (e.g. package design scales with SKU
-      // count) and matches the same approach /api/create-project uses.
-      price: paymentIntent.amount / 100,
+      price: totalPrice,
       stripePaymentIntentId: paymentIntent.id,
+      depositAmount,
+      balanceAmount,
       brandFileName: parsed.brandFileName,
       brandFileUrl: parsed.brandFileUrl,
       currentProductLink: parsed.currentProductLink,

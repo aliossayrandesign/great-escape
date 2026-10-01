@@ -32,10 +32,13 @@ export function buildPaymentMetadata(
   product: ProductType,
   siteType: string | null,
   platform: string | null,
-  details: BriefDetails
+  details: BriefDetails,
+  totalPrice: number
 ): Record<string, string> {
   return {
+    kind: "deposit",
     product,
+    totalPrice: String(totalPrice),
     siteType: siteType ?? "",
     platform: platform ?? "",
     name: clip(details.name),
@@ -57,6 +60,7 @@ export function buildPaymentMetadata(
 export function parsePaymentMetadata(metadata: Record<string, string>) {
   return {
     product: metadata.product as ProductType,
+    totalPrice: Number(metadata.totalPrice) || 0,
     siteType: metadata.siteType || null,
     platform: metadata.platform || null,
     name: metadata.name || "",

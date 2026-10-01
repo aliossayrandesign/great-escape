@@ -22,9 +22,9 @@ export default function TermsPage() {
 
       <LegalSection title="1. The Services">
         <p>
-          We offer three fixed-scope design packages: a Website, an App
-          (interface design), and a Pitch Deck (collectively, the
-          &quot;Services&quot;). Pricing for each is shown on the Site at
+          We offer fixed-scope design packages: a Website, an App
+          (interface design), a Pitch Deck, and Package Design (collectively,
+          the &quot;Services&quot;). Pricing for each is shown on the Site at
           the time of purchase. Each package has a defined scope — if your
           project needs more than what&apos;s described, we&apos;ll let you
           know before doing additional work, and any extra work will be
@@ -34,7 +34,7 @@ export default function TermsPage() {
 
       <LegalSection title="2. Ordering & Payment">
         <ul className="list-disc space-y-2 pl-5">
-          <li>Payment is due in full, upfront, before work begins.</li>
+          <li>Payment is split half upfront, half upon completion. The deposit is due before work begins; the balance is due once your project is delivered.</li>
           <li>Payments are processed securely by Stripe; we never see your full card details.</li>
           <li>Prices are listed in US dollars and do not include any taxes that may apply to you.</li>
           <li>Your project officially starts once payment has been confirmed.</li>

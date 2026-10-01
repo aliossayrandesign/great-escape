@@ -10,7 +10,14 @@ import {
 import type { StripeElementsOptions } from "@stripe/stripe-js";
 import Link from "next/link";
 import { getStripe } from "@/lib/stripe-client";
-import { PRODUCT_LABEL, PRODUCT_PRICE, getPackagePrice, type ProductType } from "@/lib/products";
+import { STRIPE_APPEARANCE, STRIPE_FONTS } from "@/lib/stripe-appearance";
+import {
+  PRODUCT_LABEL,
+  PRODUCT_PRICE,
+  getPackagePrice,
+  getDepositAmount,
+  type ProductType,
+} from "@/lib/products";
 import { PillButton } from "../ui/PillButton";
 import type { DetailsData } from "./DetailsStep";
 import type { Platform, SiteType } from "./PlatformStep";
@@ -67,75 +74,6 @@ async function createProject({
   }
 }
 
-const APPEARANCE: StripeElementsOptions["appearance"] = {
-  theme: "night",
-  variables: {
-    colorPrimary: "#ff8a8a",
-    colorBackground: "#0a0a0a",
-    colorText: "#f3f3f3",
-    colorTextSecondary: "#666666",
-    colorTextPlaceholder: "#666666",
-    colorDanger: "#ff8a8a",
-    fontFamily: "'DM Sans', sans-serif",
-    borderRadius: "16px",
-    fontSizeBase: "14px",
-    spacingUnit: "5px",
-  },
-  rules: {
-    ".Tab": {
-      border: "1px solid #773047",
-      backgroundColor: "#0a0a0a",
-      boxShadow: "none",
-      padding: "16px 20px",
-    },
-    ".Tab:hover": {
-      border: "1px solid #454545",
-      backgroundColor: "#0a0a0a",
-    },
-    ".Tab--selected": {
-      border: "1px solid #ff8a8a",
-      backgroundColor: "#0a0a0a",
-      boxShadow: "0 0 0 1px #ff8a8a",
-    },
-    ".Tab--selected:hover": {
-      border: "1px solid #ff8a8a",
-    },
-    ".TabLabel": {
-      fontWeight: "600",
-      color: "#f3f3f3",
-    },
-    ".TabLabel--selected": {
-      color: "#f3f3f3",
-    },
-    ".TabIcon--selected": {
-      fill: "#f3f3f3",
-    },
-    ".Input": {
-      border: "1px solid #2a2a2a",
-      backgroundColor: "#1f1f1f",
-      padding: "16px 20px",
-      boxShadow: "none",
-    },
-    ".Input:focus": {
-      border: "1px solid #ff8a8a",
-      boxShadow: "0 0 0 1px #ff8a8a",
-    },
-    ".Label": {
-      color: "#666666",
-      fontFamily: "'DM Mono', monospace",
-      fontSize: "12px",
-      letterSpacing: "0.05em",
-      textTransform: "uppercase",
-      marginBottom: "8px",
-    },
-    ".Block": {
-      backgroundColor: "#0a0a0a",
-      border: "1px solid #773047",
-      boxShadow: "none",
-    },
-  },
-};
-
 function PaymentForm({
   product,
   siteType,
@@ -156,6 +94,8 @@ function PaymentForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const price = product === "package" ? getPackagePrice(skuCount ?? 1) : PRODUCT_PRICE[product];
+  const deposit = getDepositAmount(price);
+  const balance = price - deposit;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -218,15 +158,23 @@ function PaymentForm({
           </div>
           <div className="mt-4 flex items-center justify-between">
             <span className="font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
-              Total
+              Due today (50%)
             </span>
             <span className="text-xl font-semibold">
-              ${price.toLocaleString()}
+              ${deposit.toLocaleString()}
+            </span>
+          </div>
+          <div className="mt-2 flex items-center justify-between">
+            <span className="font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
+              Due on delivery
+            </span>
+            <span className="text-sm text-paper/60">
+              ${balance.toLocaleString()}
             </span>
           </div>
           <p className="mt-6 text-pretty text-xs leading-relaxed text-dark-400">
-            First look delivered within 1 week of payment. Up to 3 rounds
-            of revisions included.
+            Half now, half upon completion. First look delivered within 1
+            week of payment. Up to 3 rounds of revisions included.
           </p>
         </div>
 
@@ -252,7 +200,7 @@ function PaymentForm({
               disabled={!stripe || submitting}
               className="h-14 w-full whitespace-nowrap"
             >
-              {submitting ? "Processing…" : "Complete →"}
+              {submitting ? "Processing…" : `Pay deposit — $${deposit.toLocaleString()} →`}
             </PillButton>
             <p className="text-balance text-center text-xs text-dark-400">
               By completing this purchase, you agree to our{" "}
@@ -357,13 +305,8 @@ export function PaymentStep({
 
   const options: StripeElementsOptions = {
     clientSecret,
-    appearance: APPEARANCE,
-    fonts: [
-      {
-        cssSrc:
-          "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap",
-      },
-    ],
+    appearance: STRIPE_APPEARANCE,
+    fonts: STRIPE_FONTS,
   };
 
   return (

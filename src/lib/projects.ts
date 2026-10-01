@@ -9,6 +9,8 @@ type NewProjectInput = {
   product: ProductType;
   price: number;
   stripePaymentIntentId: string;
+  depositAmount: number;
+  balanceAmount: number;
   brandFileName: string | null;
   brandFileUrl: string | null;
   currentProductLink: string | null;
@@ -27,11 +29,12 @@ export async function createProject(input: NewProjectInput): Promise<Project> {
   const result = await query(
     `INSERT INTO projects (
       client_name, client_email, company, product, price,
-      stripe_payment_intent_id, brand_file_name, brand_file_url,
+      stripe_payment_intent_id, deposit_amount, balance_amount,
+      brand_file_name, brand_file_url,
       current_product_link, current_product_file_name, current_product_file_url,
       dieline_file_name, dieline_file_url,
       inspiration_links, notes, site_type, platform, sku_count
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
     RETURNING *`,
     [
       input.clientName,
@@ -40,6 +43,8 @@ export async function createProject(input: NewProjectInput): Promise<Project> {
       input.product,
       input.price,
       input.stripePaymentIntentId,
+      input.depositAmount,
+      input.balanceAmount,
       input.brandFileName,
       input.brandFileUrl,
       input.currentProductLink,
@@ -75,6 +80,32 @@ export async function getProjectByPaymentIntentId(
   if (result.rows.length === 0) return null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return rowToProject(result.rows[0] as any);
+}
+
+export async function getProjectByBalancePaymentIntentId(
+  balancePaymentIntentId: string
+): Promise<Project | null> {
+  const result = await query(
+    `SELECT * FROM projects WHERE balance_payment_intent_id = $1`,
+    [balancePaymentIntentId]
+  );
+  if (result.rows.length === 0) return null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return rowToProject(result.rows[0] as any);
+}
+
+export async function setBalancePaymentIntent(id: string, paymentIntentId: string) {
+  await query(`UPDATE projects SET balance_payment_intent_id = $2 WHERE id = $1`, [
+    id,
+    paymentIntentId,
+  ]);
+}
+
+export async function markBalancePaid(id: string) {
+  await query(
+    `UPDATE projects SET balance_paid_at = now() WHERE id = $1 AND balance_paid_at IS NULL`,
+    [id]
+  );
 }
 
 export async function listProjects(): Promise<Project[]> {

@@ -8,8 +8,12 @@ export type Project = {
   clientEmail: string;
   company: string | null;
   product: ProductType;
-  price: number;
-  stripePaymentIntentId: string;
+  price: number; // total contracted price, not just what's been collected
+  stripePaymentIntentId: string; // the deposit charge
+  depositAmount: number;
+  balanceAmount: number;
+  balancePaymentIntentId: string | null;
+  balancePaidAt: string | null;
   status: ProjectStatus;
   projectLink: string | null;
   brandFileName: string | null;
@@ -45,6 +49,10 @@ type ProjectRow = {
   product: string;
   price: number;
   stripe_payment_intent_id: string;
+  deposit_amount: number;
+  balance_amount: number;
+  balance_payment_intent_id: string | null;
+  balance_paid_at: string | null;
   status: string;
   project_link: string | null;
   brand_file_name: string | null;
@@ -81,6 +89,10 @@ export function rowToProject(row: ProjectRow): Project {
     product: row.product as ProductType,
     price: row.price,
     stripePaymentIntentId: row.stripe_payment_intent_id,
+    depositAmount: row.deposit_amount,
+    balanceAmount: row.balance_amount,
+    balancePaymentIntentId: row.balance_payment_intent_id,
+    balancePaidAt: row.balance_paid_at,
     status: row.status as ProjectStatus,
     projectLink: row.project_link,
     brandFileName: row.brand_file_name,

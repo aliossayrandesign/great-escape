@@ -26,3 +26,9 @@ export function getPackagePrice(skuCount: number): number {
   const clamped = Math.min(Math.max(skuCount, PACKAGE_MIN_SKUS), PACKAGE_MAX_SKUS);
   return PRODUCT_PRICE.package + (clamped - PACKAGE_MIN_SKUS) * PACKAGE_SKU_INCREMENT;
 }
+
+// Standard split for every order: half to start, half on delivery. Centralized
+// here so the ratio is never computed ad-hoc in more than one place.
+export function getDepositAmount(totalPrice: number): number {
+  return totalPrice / 2;
+}

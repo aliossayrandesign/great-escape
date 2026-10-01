@@ -6,6 +6,7 @@ import { PRODUCT_LABEL, type ProductType } from "@/lib/products";
 import { PillButton } from "@/components/ui/PillButton";
 import { SimpleNav } from "@/components/SimpleNav";
 import { CALENDLY_URL } from "@/lib/site-config";
+import { BalancePayment } from "@/components/project/BalancePayment";
 
 type Revision = {
   id: string;
@@ -23,6 +24,9 @@ type Project = {
   projectLink: string | null;
   revisionsUsed: number;
   createdAt: string;
+  depositAmount: number;
+  balanceAmount: number;
+  balancePaidAt: string | null;
 };
 
 const STEPS: { key: Project["status"]; label: string }[] = [
@@ -43,6 +47,7 @@ export default function ClientProjectPage({
   const [notFound, setNotFound] = useState(false);
   const [message, setMessage] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
+  const [payingBalance, setPayingBalance] = useState(false);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -189,6 +194,43 @@ export default function ClientProjectPage({
                   View your {PRODUCT_LABEL[project.product].toLowerCase()} →
                 </PillButton>
               </a>
+            </div>
+          )}
+
+          {project.status === "delivered" && project.balanceAmount > 0 && (
+            <div className="mt-6 rounded-[20px] border border-panel-stroke bg-dark-900/40 p-6 text-center">
+              {project.balancePaidAt ? (
+                <p className="text-pretty text-sm text-[#7ac47a]">
+                  Balance paid in full — thank you!
+                </p>
+              ) : (
+                <>
+                  <p className="text-pretty text-sm text-paper/70">
+                    Half now, half upon completion — your remaining balance of{" "}
+                    <span className="text-paper">${project.balanceAmount.toLocaleString()}</span>{" "}
+                    is ready to pay.
+                  </p>
+                  {payingBalance ? (
+                    <BalancePayment
+                      projectId={project.id}
+                      balanceAmount={project.balanceAmount}
+                      onPaid={() => {
+                        setPayingBalance(false);
+                        load();
+                      }}
+                    />
+                  ) : (
+                    <PillButton
+                      size="lg"
+                      variant="paper"
+                      onClick={() => setPayingBalance(true)}
+                      className="mt-4"
+                    >
+                      Pay balance — ${project.balanceAmount.toLocaleString()} →
+                    </PillButton>
+                  )}
+                </>
+              )}
             </div>
           )}
         </div>

@@ -7,8 +7,12 @@ CREATE TABLE IF NOT EXISTS projects (
   client_email TEXT NOT NULL,
   company TEXT,
   product TEXT NOT NULL,
-  price INTEGER NOT NULL,
-  stripe_payment_intent_id TEXT NOT NULL UNIQUE,
+  price INTEGER NOT NULL, -- total contracted price, not just what's been collected
+  stripe_payment_intent_id TEXT NOT NULL UNIQUE, -- the deposit charge
+  deposit_amount INTEGER NOT NULL DEFAULT 0,
+  balance_amount INTEGER NOT NULL DEFAULT 0,
+  balance_payment_intent_id TEXT,
+  balance_paid_at TIMESTAMPTZ,
   status TEXT NOT NULL DEFAULT 'in_progress',
   project_link TEXT,
   brand_file_name TEXT,

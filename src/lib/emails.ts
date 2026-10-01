@@ -98,6 +98,9 @@ export async function sendClientConfirmationEmail(project: Project) {
             ${escapeHtml(productLabel(project))} · $${project.price.toLocaleString()}
           </div>
           <p style="margin-top:14px; font-size:14px; line-height:1.6; color:#a8a8a8;">
+            Half now, half upon completion — $${project.depositAmount.toLocaleString()} paid today, $${project.balanceAmount.toLocaleString()} due when your project is delivered.
+          </p>
+          <p style="margin-top:10px; font-size:14px; line-height:1.6; color:#a8a8a8;">
             First look delivered within 1 week. Up to 3 rounds of revisions included.
           </p>
           <a href="${projectUrl(project.id)}" style="display:inline-block; margin-top:18px; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
@@ -131,6 +134,7 @@ export async function sendClientConfirmationEmail(project: Project) {
 
   const text = [
     `Confirmed: ${productLabel(project)} · $${project.price.toLocaleString()}`,
+    `Half now, half upon completion — $${project.depositAmount.toLocaleString()} paid today, $${project.balanceAmount.toLocaleString()} due when your project is delivered.`,
     `Track your project: ${projectUrl(project.id)}`,
     `First look delivered within 1 week. Up to 3 rounds of revisions included.`,
   ].join("\n");
@@ -154,7 +158,7 @@ export async function sendInternalNotificationEmail(project: Project) {
             ${escapeHtml(project.clientName)}
           </div>
           <div style="margin-top:4px; font-size:14px; color:#a8a8a8;">
-            ${escapeHtml(productLabel(project))} · $${project.price.toLocaleString()}
+            ${escapeHtml(productLabel(project))} · $${project.price.toLocaleString()} total — $${project.depositAmount.toLocaleString()} deposit paid, $${project.balanceAmount.toLocaleString()} due on delivery
           </div>
           <a href="${adminProjectUrl(project.id)}" style="display:inline-block; margin-top:18px; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
             Open in dashboard →
@@ -221,11 +225,16 @@ export async function sendDeliveryEmail(project: Project) {
           <p style="margin-top:14px; font-size:14px; line-height:1.6; color:#a8a8a8;">
             Hey ${escapeHtml(project.clientName)} — take a look and let us know what you think on your project page.
           </p>
+          ${
+            project.balanceAmount > 0 && !project.balancePaidAt
+              ? `<p style="margin-top:10px; font-size:14px; line-height:1.6; color:#a8a8a8;">The remaining $${project.balanceAmount.toLocaleString()} balance is ready to pay on your project page.</p>`
+              : ""
+          }
           <a href="${escapeHtml(project.projectLink)}" style="display:inline-block; margin-top:18px; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
             View your ${escapeHtml(PRODUCT_LABEL[project.product]).toLowerCase()} →
           </a>
           <div style="margin-top:12px;">
-            <a href="${projectUrl(project.id)}" style="color:#ff8a8a; text-decoration:none; font-size:13px;">Leave feedback or book a call →</a>
+            <a href="${projectUrl(project.id)}" style="color:#ff8a8a; text-decoration:none; font-size:13px;">Leave feedback, pay your balance, or book a call →</a>
           </div>
         </td>
       </tr>
@@ -360,6 +369,42 @@ export async function sendStudioUpdateToClientEmail(project: Project, message: s
     from: FROM,
     to: project.clientEmail,
     subject: `We replied — ${PRODUCT_LABEL[project.product]} update`,
+    html,
+    text,
+  });
+}
+
+export async function sendBalancePaidEmail(project: Project) {
+  const html = shell(
+    `
+      <tr>
+        <td style="padding:28px 32px 24px;">
+          ${label("Balance Paid")}
+          <div style="margin-top:8px; font-size:26px; font-weight:600; letter-spacing:-0.01em; color:#f3f3f3;">
+            ${escapeHtml(project.clientName)}
+          </div>
+          <div style="margin-top:4px; font-size:14px; color:#a8a8a8;">
+            ${escapeHtml(productLabel(project))} · $${project.balanceAmount.toLocaleString()} balance paid in full
+          </div>
+          <a href="${adminProjectUrl(project.id)}" style="display:inline-block; margin-top:18px; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
+            Open in dashboard →
+          </a>
+        </td>
+      </tr>
+    `,
+    false
+  );
+
+  const text = [
+    `Balance paid: ${project.clientName} — ${productLabel(project)}`,
+    `$${project.balanceAmount.toLocaleString()} balance paid in full.`,
+    `Dashboard: ${adminProjectUrl(project.id)}`,
+  ].join("\n");
+
+  await getResend().emails.send({
+    from: FROM,
+    to: ORDER_NOTIFICATION_TO,
+    subject: `Balance paid: ${project.clientName} · ${PRODUCT_LABEL[project.product]}`,
     html,
     text,
   });

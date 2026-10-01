@@ -22,6 +22,9 @@ type Project = {
   company: string | null;
   product: ProductType;
   price: number;
+  depositAmount: number;
+  balanceAmount: number;
+  balancePaidAt: string | null;
   status: "in_progress" | "in_review" | "delivered";
   projectLink: string | null;
   brandFileName: string | null;
@@ -153,7 +156,24 @@ export default function AdminProjectPage({
                 : ""}{" "}
               · ${project.price.toLocaleString()}
             </div>
-            <div className="mt-1 flex gap-2">
+            <div className="mt-1 text-xs text-paper/50">
+              ${project.depositAmount.toLocaleString()} deposit paid
+              {project.balanceAmount > 0 && (
+                <>
+                  {" · "}
+                  {project.balancePaidAt ? (
+                    <span className="text-[#7ac47a]">
+                      ${project.balanceAmount.toLocaleString()} balance paid
+                    </span>
+                  ) : (
+                    <span className="text-coral">
+                      ${project.balanceAmount.toLocaleString()} balance due
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
+            <div className="mt-2 flex gap-2">
               {(["in_progress", "in_review", "delivered"] as const).map((s) => (
                 <button
                   key={s}

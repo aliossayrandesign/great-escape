@@ -6,6 +6,7 @@ import {
   PACKAGE_MAX_SKUS,
   PACKAGE_MIN_SKUS,
   getPackagePrice,
+  getDepositAmount,
   type ProductType,
 } from "@/lib/products";
 import { buildPaymentMetadata } from "@/lib/payment-metadata";
@@ -40,7 +41,7 @@ export async function POST(request: Request) {
   }
 
   let skuCount: number | null = null;
-  let amount: number;
+  let totalPrice: number;
 
   if (product === "package") {
     skuCount = Number(body?.skuCount);
@@ -52,15 +53,19 @@ export async function POST(request: Request) {
     }
     // Price is computed server-side from skuCount — never trust a
     // client-supplied amount for a real charge.
-    amount = getPackagePrice(skuCount) * 100;
+    totalPrice = getPackagePrice(skuCount);
   } else {
-    amount = PRODUCT_PRICE[product] * 100; // Stripe expects cents
+    totalPrice = PRODUCT_PRICE[product];
   }
 
+  // Standard split: half now, half on delivery. Only the deposit is charged
+  // here — the balance is collected later from the client's project page.
+  const depositAmount = getDepositAmount(totalPrice);
+
   const paymentIntent = await stripe.paymentIntents.create({
-    amount,
+    amount: depositAmount * 100, // Stripe expects cents
     currency: "usd",
-    description: `great esc. — ${PRODUCT_LABEL[product]} package`,
+    description: `great esc. — ${PRODUCT_LABEL[product]} deposit`,
     statement_descriptor_suffix: "GREAT ESC",
     // A truncated copy of the brief, used only as a fallback if the
     // client never completes the normal /api/create-project call — see
@@ -69,7 +74,8 @@ export async function POST(request: Request) {
       product,
       body?.siteType ?? null,
       body?.platform ?? null,
-      { ...(body?.details ?? { name: "", email: "" }), skuCount }
+      { ...(body?.details ?? { name: "", email: "" }), skuCount },
+      totalPrice
     ),
     automatic_payment_methods: { enabled: true, allow_redirects: "never" },
   });

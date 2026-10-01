@@ -122,6 +122,11 @@ export function DashboardClient({ projects }: { projects: EnrichedProject[] }) {
                 </td>
                 <td className="px-5 py-4 font-mono">
                   ${project.price.toLocaleString()}
+                  <div className="font-sans text-[11px] text-paper/40">
+                    {project.balancePaidAt
+                      ? "Paid in full"
+                      : `$${project.balanceAmount.toLocaleString()} due on delivery`}
+                  </div>
                 </td>
                 <td className="px-5 py-4">
                   <span
