@@ -5,6 +5,8 @@ import type { Project } from "./types";
 const SITE_URL = "https://great-escape-five.vercel.app";
 const MASON_BANNER = `${SITE_URL}/images/email/mason-caption.png`;
 const REVIEW_BANNER = `${SITE_URL}/images/email/review-caption.png`;
+const DELIVERY_BANNER = `${SITE_URL}/images/email/delivery-caption.png`;
+const REPLY_BANNER = `${SITE_URL}/images/email/reply-caption.png`;
 const BRANDMARK = `${SITE_URL}/images/email/brandmark.png`;
 const FROM = "Great Escape <orders@greatescape.studio>";
 
@@ -220,7 +222,8 @@ export async function sendDeliveryEmail(project: Project) {
         </td>
       </tr>
     `,
-    true
+    true,
+    { src: DELIVERY_BANNER, alt: "It's ready." }
   );
 
   const text = [
@@ -335,7 +338,8 @@ export async function sendStudioUpdateToClientEmail(project: Project, message: s
         </td>
       </tr>
     `,
-    true
+    true,
+    { src: REPLY_BANNER, alt: "We replied." }
   );
 
   const text = [
