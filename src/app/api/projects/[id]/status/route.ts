@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdminRequest } from "@/lib/admin-auth";
-import { updateProjectStatus } from "@/lib/projects";
+import { getProject, updateProjectStatus } from "@/lib/projects";
+import { sendReviewReadyEmail } from "@/lib/emails";
 import type { ProjectStatus } from "@/lib/types";
 
 const VALID_STATUSES: ProjectStatus[] = ["in_progress", "in_review", "delivered"];
@@ -19,6 +20,17 @@ export async function POST(
     return NextResponse.json({ error: "Invalid status" }, { status: 400 });
   }
 
-  await updateProjectStatus(id, body.status as ProjectStatus);
+  const status = body.status as ProjectStatus;
+  await updateProjectStatus(id, status);
+
+  if (status === "in_review") {
+    const project = await getProject(id);
+    if (project) {
+      sendReviewReadyEmail(project).catch((error) =>
+        console.error("Failed to send review-ready email", error)
+      );
+    }
+  }
+
   return NextResponse.json({ ok: true });
 }

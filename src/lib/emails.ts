@@ -4,6 +4,7 @@ import type { Project } from "./types";
 
 const SITE_URL = "https://great-escape-five.vercel.app";
 const MASON_BANNER = `${SITE_URL}/images/email/mason-caption.png`;
+const REVIEW_BANNER = `${SITE_URL}/images/email/review-caption.png`;
 const BRANDMARK = `${SITE_URL}/images/email/brandmark.png`;
 const FROM = "Great Escape <orders@greatescape.studio>";
 
@@ -50,13 +51,17 @@ function fileLink(name: string | null, url: string | null, fallback = "None prov
   return `<span style="color:#8a8a8a;">${fallback}</span>`;
 }
 
-function shell(bodyRows: string, withBanner: boolean) {
+function shell(
+  bodyRows: string,
+  withBanner: boolean,
+  banner: { src: string; alt: string } = { src: MASON_BANNER, alt: "The work begins…" }
+) {
   return `
     <div style="background:#0a0a0a; padding:40px 16px; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
       <table role="presentation" width="100%" style="max-width:560px; margin:0 auto; border-collapse:collapse; background:#141414; border:1px solid #262626; border-radius:20px; overflow:hidden;">
         ${
           withBanner
-            ? `<tr><td style="padding:0;"><img src="${MASON_BANNER}" width="560" height="313" alt="The work begins…" style="display:block; width:100%; height:auto;" /></td></tr>`
+            ? `<tr><td style="padding:0;"><img src="${banner.src}" width="560" height="313" alt="${banner.alt}" style="display:block; width:100%; height:auto;" /></td></tr>`
             : ""
         }
         ${bodyRows}
@@ -227,6 +232,42 @@ export async function sendDeliveryEmail(project: Project) {
     from: FROM,
     to: project.clientEmail,
     subject: `Your ${PRODUCT_LABEL[project.product]} is ready`,
+    html,
+    text,
+  });
+}
+
+export async function sendReviewReadyEmail(project: Project) {
+  const html = shell(
+    `
+      <tr>
+        <td style="padding:24px 32px 28px;">
+          ${label("In Review")}
+          <div style="margin-top:8px; font-size:26px; font-weight:600; letter-spacing:-0.01em; color:#f3f3f3;">
+            Your ${escapeHtml(PRODUCT_LABEL[project.product]).toLowerCase()} is ready for a first look.
+          </div>
+          <p style="margin-top:14px; font-size:14px; line-height:1.6; color:#a8a8a8;">
+            Hey ${escapeHtml(project.clientName)} — we just moved things into review. Check your project page for where things stand, and leave feedback whenever you're ready.
+          </p>
+          <a href="${projectUrl(project.id)}" style="display:inline-block; margin-top:18px; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
+            View your project →
+          </a>
+        </td>
+      </tr>
+    `,
+    true,
+    { src: REVIEW_BANNER, alt: "Take a look…" }
+  );
+
+  const text = [
+    `Your ${PRODUCT_LABEL[project.product]} is ready for a first look.`,
+    `View your project: ${projectUrl(project.id)}`,
+  ].join("\n");
+
+  await getResend().emails.send({
+    from: FROM,
+    to: project.clientEmail,
+    subject: `Take a look — ${PRODUCT_LABEL[project.product]}`,
     html,
     text,
   });
