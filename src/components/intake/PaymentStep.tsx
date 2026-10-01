@@ -8,6 +8,7 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import type { StripeElementsOptions } from "@stripe/stripe-js";
+import Link from "next/link";
 import { getStripe } from "@/lib/stripe-client";
 import { PRODUCT_LABEL, PRODUCT_PRICE, type ProductType } from "@/lib/products";
 import { PillButton } from "../ui/PillButton";
@@ -244,6 +245,17 @@ function PaymentForm({
             >
               {submitting ? "Processing…" : "Complete →"}
             </PillButton>
+            <p className="text-balance text-center text-xs text-dark-400">
+              By completing this purchase, you agree to our{" "}
+              <Link href="/terms" target="_blank" className="text-paper/70 hover:text-coral hover:underline">
+                Terms
+              </Link>{" "}
+              and{" "}
+              <Link href="/privacy" target="_blank" className="text-paper/70 hover:text-coral hover:underline">
+                Privacy Policy
+              </Link>
+              .
+            </p>
           </div>
         </form>
       </div>
@@ -273,7 +285,23 @@ export function PaymentStep({
     fetch("/api/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ product }),
+      body: JSON.stringify({
+        product,
+        siteType,
+        platform,
+        details: {
+          name: details.name,
+          email: details.email,
+          company: details.company,
+          brandFileName: details.brandFile?.name ?? null,
+          brandFileUrl: details.brandFileUrl,
+          currentProductFileName: details.currentProductFile?.name ?? null,
+          currentProductFileUrl: details.currentProductFileUrl,
+          currentProductLink: details.currentProductLink,
+          links: details.links,
+          notes: details.notes,
+        },
+      }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to create payment intent");
@@ -289,6 +317,10 @@ export function PaymentStep({
     return () => {
       cancelled = true;
     };
+    // Create exactly one PaymentIntent per checkout session. siteType/platform/details
+    // are fixed by the time this step mounts (set in earlier steps) and intentionally
+    // excluded so an in-progress edit never spawns a second PaymentIntent.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 
   if (loadError) {

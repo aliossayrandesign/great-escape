@@ -102,13 +102,30 @@ export function DetailsStep({
   const removeLink = (index: number) =>
     setLinks((prev) => prev.filter((_, i) => i !== index));
 
+  const uploadTokenRef = useRef<string | null>(null);
+  const getUploadToken = async () => {
+    if (uploadTokenRef.current) return uploadTokenRef.current;
+    const res = await fetch("/api/upload/token", { method: "POST" });
+    if (!res.ok) throw new Error("Failed to start upload session");
+    const data = (await res.json()) as { token: string };
+    uploadTokenRef.current = data.token;
+    return data.token;
+  };
+
   const handleFiles = (files: FileList | null) => {
     const file = files?.[0];
     if (!file) return;
     setBrandFile(file);
     setBrandFileUrl(null);
     setBrandUploadState("uploading");
-    upload(file.name, file, { access: "public", handleUploadUrl: "/api/upload" })
+    getUploadToken()
+      .then((token) =>
+        upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+          clientPayload: token,
+        })
+      )
       .then((blob) => {
         setBrandFileUrl(blob.url);
         setBrandUploadState("done");
@@ -122,7 +139,14 @@ export function DetailsStep({
     setCurrentProductFile(file);
     setCurrentProductFileUrl(null);
     setCurrentProductUploadState("uploading");
-    upload(file.name, file, { access: "public", handleUploadUrl: "/api/upload" })
+    getUploadToken()
+      .then((token) =>
+        upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+          clientPayload: token,
+        })
+      )
       .then((blob) => {
         setCurrentProductFileUrl(blob.url);
         setCurrentProductUploadState("done");

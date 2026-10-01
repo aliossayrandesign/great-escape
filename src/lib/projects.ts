@@ -58,6 +58,18 @@ export async function getProject(id: string): Promise<Project | null> {
   return rowToProject(result.rows[0] as any);
 }
 
+export async function getProjectByPaymentIntentId(
+  stripePaymentIntentId: string
+): Promise<Project | null> {
+  const result = await query(
+    `SELECT * FROM projects WHERE stripe_payment_intent_id = $1`,
+    [stripePaymentIntentId]
+  );
+  if (result.rows.length === 0) return null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return rowToProject(result.rows[0] as any);
+}
+
 export async function listProjects(): Promise<Project[]> {
   const result = await query(`SELECT * FROM projects ORDER BY created_at DESC`);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

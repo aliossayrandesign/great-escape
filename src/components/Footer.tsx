@@ -49,9 +49,23 @@ export function Footer() {
       </div>
 
       <div className="mt-12 flex flex-col-reverse items-start justify-between gap-4 border-t border-paper/10 pt-6 sm:flex-row sm:items-center">
-        <p className="font-mono text-xs text-paper/30">
-          © {year} Great Escape. All rights reserved.
-        </p>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <p className="font-mono text-xs text-paper/30">
+            © {year} Great Escape. All rights reserved.
+          </p>
+          <Link
+            href="/privacy"
+            className="font-mono text-xs text-paper/30 hover:text-paper/60"
+          >
+            Privacy
+          </Link>
+          <Link
+            href="/terms"
+            className="font-mono text-xs text-paper/30 hover:text-paper/60"
+          >
+            Terms
+          </Link>
+        </div>
         <p className="font-mono text-xs text-paper/30">
           + Escape the ordinary +
         </p>
