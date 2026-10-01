@@ -21,6 +21,7 @@ type Project = {
   status: "in_progress" | "in_review" | "delivered";
   projectLink: string | null;
   revisionsUsed: number;
+  createdAt: string;
 };
 
 const STEPS: { key: Project["status"]; label: string }[] = [
@@ -100,6 +101,8 @@ export default function ClientProjectPage({
   }
 
   const currentStepIndex = STEPS.findIndex((s) => s.key === project.status);
+  const estimatedDelivery = new Date(project.createdAt);
+  estimatedDelivery.setDate(estimatedDelivery.getDate() + 7);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-dark-950 pt-[81px] sm:pt-[105px]">
@@ -148,6 +151,18 @@ export default function ClientProjectPage({
               </div>
             ))}
           </div>
+
+          {project.status !== "delivered" && (
+            <p className="mt-6 text-center font-mono text-xs tracking-[0.1em] text-paper/40 uppercase">
+              Estimated delivery:{" "}
+              <span className="text-paper/70">
+                {estimatedDelivery.toLocaleDateString(undefined, {
+                  month: "long",
+                  day: "numeric",
+                })}
+              </span>
+            </p>
+          )}
 
           {project.projectLink && (
             <div className="mt-8 rounded-[20px] border border-coral/30 bg-coral/5 p-6 text-center">

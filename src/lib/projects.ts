@@ -94,6 +94,23 @@ export async function deliverProject(id: string, projectLink: string) {
   );
 }
 
+// One row per project: whoever posted the most recent revision. Used to flag
+// projects where the client spoke last and the studio hasn't replied yet.
+export async function getLatestRevisionAuthors(): Promise<
+  Map<string, "client" | "studio">
+> {
+  const result = await query<{ project_id: string; author: string }>(
+    `SELECT DISTINCT ON (project_id) project_id, author
+     FROM revisions
+     ORDER BY project_id, created_at DESC`
+  );
+  const map = new Map<string, "client" | "studio">();
+  for (const row of result.rows) {
+    map.set(row.project_id, row.author as "client" | "studio");
+  }
+  return map;
+}
+
 export async function listRevisions(projectId: string): Promise<Revision[]> {
   const result = await query(
     `SELECT * FROM revisions WHERE project_id = $1 ORDER BY created_at ASC`,
