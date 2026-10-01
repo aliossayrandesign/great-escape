@@ -6,7 +6,7 @@ import { RollsSequence } from "@/components/case-study/RollsSequence";
 import { ScreenshotReveal } from "@/components/case-study/ScreenshotReveal";
 
 export const metadata: Metadata = {
-  title: "Watch it ship — great esc.",
+  title: "Watch it ship",
   description:
     "A real brief, a real turnaround: watch what happens between the intake and the finished product.",
 };

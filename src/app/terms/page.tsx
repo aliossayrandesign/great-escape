@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalLayout, LegalSection } from "@/components/legal/LegalLayout";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions — great esc.",
+  title: "Terms & Conditions",
   robots: { index: false, follow: false },
 };
 

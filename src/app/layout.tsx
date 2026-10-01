@@ -15,7 +15,10 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "great esc.",
+  title: {
+    default: "Great Escape Studio",
+    template: "%s — Great Escape Studio",
+  },
   description:
     "A creative studio — tell us your product, drop your inspo, and escape with a fully designed website, app, or pitch deck.",
 };
