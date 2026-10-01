@@ -41,6 +41,8 @@ type Project = {
   platform: string | null;
   skuCount: number | null;
   revisionsUsed: number;
+  promoCode: string | null;
+  discountAmount: number;
   createdAt: string;
 };
 
@@ -196,6 +198,12 @@ export default function AdminProjectPage({
                 </>
               )}
             </div>
+            {project.promoCode && (
+              <div className="mt-1 text-xs text-paper/40">
+                Promo <span className="font-mono">{project.promoCode}</span> — −$
+                {project.discountAmount.toLocaleString()}
+              </div>
+            )}
             <div className="mt-2 flex gap-2">
               {(["in_progress", "in_review", "delivered"] as const).map((s) => (
                 <button

@@ -126,6 +126,7 @@ export function DashboardClient({ projects }: { projects: EnrichedProject[] }) {
                     {project.balancePaidAt
                       ? "Paid in full"
                       : `$${project.balanceAmount.toLocaleString()} due on delivery`}
+                    {project.promoCode ? ` · promo ${project.promoCode}` : ""}
                   </div>
                 </td>
                 <td className="px-5 py-4">

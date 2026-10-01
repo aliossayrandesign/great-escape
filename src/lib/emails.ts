@@ -160,6 +160,11 @@ export async function sendInternalNotificationEmail(project: Project) {
           <div style="margin-top:4px; font-size:14px; color:#a8a8a8;">
             ${escapeHtml(productLabel(project))} · $${project.price.toLocaleString()} total — $${project.depositAmount.toLocaleString()} deposit paid, $${project.balanceAmount.toLocaleString()} due on delivery
           </div>
+          ${
+            project.promoCode
+              ? `<div style="margin-top:4px; font-size:13px; color:#7ac47a;">Promo ${escapeHtml(project.promoCode)} applied — −$${project.discountAmount.toLocaleString()}</div>`
+              : ""
+          }
           <a href="${adminProjectUrl(project.id)}" style="display:inline-block; margin-top:18px; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
             Open in dashboard →
           </a>

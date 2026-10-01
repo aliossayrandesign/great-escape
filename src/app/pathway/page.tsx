@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { listProjects, getLatestRevisionAuthors } from "@/lib/projects";
 import { SimpleNav } from "@/components/SimpleNav";
 import { DashboardClient } from "@/components/pathway/DashboardClient";
@@ -37,9 +38,17 @@ export default async function AdminDashboardPage() {
     <main className="min-h-screen bg-dark-950 px-6 pt-[81px] pb-16 sm:px-10 sm:pt-[105px]">
       <SimpleNav />
       <div className="mx-auto max-w-5xl py-10">
-        <p className="font-mono text-xs tracking-[0.15em] text-coral uppercase">
-          + Internal +
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="font-mono text-xs tracking-[0.15em] text-coral uppercase">
+            + Internal +
+          </p>
+          <Link
+            href="/pathway/promo-codes"
+            className="font-mono text-xs tracking-[0.1em] text-paper/40 uppercase hover:text-paper"
+          >
+            Promo codes →
+          </Link>
+        </div>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
           Projects
         </h1>

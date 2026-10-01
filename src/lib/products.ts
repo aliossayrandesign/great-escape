@@ -27,6 +27,11 @@ export function getPackagePrice(skuCount: number): number {
   return PRODUCT_PRICE.package + (clamped - PACKAGE_MIN_SKUS) * PACKAGE_SKU_INCREMENT;
 }
 
+export function getTotalPrice(product: ProductType, skuCount?: number | null): number {
+  if (product === "package") return getPackagePrice(skuCount ?? PACKAGE_MIN_SKUS);
+  return PRODUCT_PRICE[product];
+}
+
 // Standard split for every order: half to start, half on delivery. Centralized
 // here so the ratio is never computed ad-hoc in more than one place.
 export function getDepositAmount(totalPrice: number): number {

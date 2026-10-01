@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { createProject } from "@/lib/projects";
 import { sendClientConfirmationEmail, sendInternalNotificationEmail } from "@/lib/emails";
+import { incrementPromoCodeUsage } from "@/lib/promo-codes";
 import type { ProductType } from "@/lib/products";
 
 type CreateProjectPayload = {
@@ -53,6 +54,9 @@ export async function POST(request: Request) {
   const totalPrice = Number(paymentIntent.metadata?.totalPrice) || paymentIntent.amount / 100;
   const depositAmount = paymentIntent.amount / 100;
   const balanceAmount = totalPrice - depositAmount;
+  const promoCodeId = paymentIntent.metadata?.promoCodeId || null;
+  const promoCode = paymentIntent.metadata?.promoCode || null;
+  const discountAmount = Number(paymentIntent.metadata?.discountAmount) || 0;
 
   const project = await createProject({
     clientName: details.name,
@@ -75,7 +79,15 @@ export async function POST(request: Request) {
     siteType: siteType ?? null,
     platform: platform ?? null,
     skuCount: product === "package" ? (skuCount ?? null) : null,
+    promoCode,
+    discountAmount,
   });
+
+  if (promoCodeId) {
+    await incrementPromoCodeUsage(promoCodeId).catch((err) =>
+      console.error("Failed to increment promo code usage", err)
+    );
+  }
 
   // Fire both emails in parallel — neither should block the customer's
   // success screen on failing; worth alerting on separately, but not

@@ -10,6 +10,7 @@ import {
   type ProductType,
 } from "@/lib/products";
 import { buildPaymentMetadata } from "@/lib/payment-metadata";
+import { validatePromoCode } from "@/lib/promo-codes";
 
 const VALID_PRODUCTS: ProductType[] = ["website", "app", "deck", "package"];
 
@@ -18,6 +19,7 @@ type RequestBody = {
   siteType?: string | null;
   platform?: string | null;
   skuCount?: number | null;
+  promoCode?: string | null;
   details?: {
     name: string;
     email: string;
@@ -58,6 +60,19 @@ export async function POST(request: Request) {
     totalPrice = PRODUCT_PRICE[product];
   }
 
+  let discountAmount = 0;
+  let appliedPromo: { id: string; code: string } | null = null;
+  const promoCodeInput = body?.promoCode?.trim();
+  if (promoCodeInput) {
+    const result = await validatePromoCode(promoCodeInput, totalPrice);
+    if (!result.valid) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
+    }
+    discountAmount = result.discountAmount;
+    appliedPromo = { id: result.promo.id, code: result.promo.code };
+    totalPrice -= discountAmount;
+  }
+
   // Standard split: half now, half on delivery. Only the deposit is charged
   // here — the balance is collected later from the client's project page.
   const depositAmount = getDepositAmount(totalPrice);
@@ -75,10 +90,11 @@ export async function POST(request: Request) {
       body?.siteType ?? null,
       body?.platform ?? null,
       { ...(body?.details ?? { name: "", email: "" }), skuCount },
-      totalPrice
+      totalPrice,
+      appliedPromo ? { ...appliedPromo, discountAmount } : null
     ),
     automatic_payment_methods: { enabled: true, allow_redirects: "never" },
   });
 
-  return NextResponse.json({ clientSecret: paymentIntent.client_secret });
+  return NextResponse.json({ clientSecret: paymentIntent.client_secret, discountAmount });
 }

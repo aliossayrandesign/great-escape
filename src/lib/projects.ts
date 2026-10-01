@@ -23,6 +23,8 @@ type NewProjectInput = {
   siteType: string | null;
   platform: string | null;
   skuCount: number | null;
+  promoCode: string | null;
+  discountAmount: number;
 };
 
 export async function createProject(input: NewProjectInput): Promise<Project> {
@@ -33,8 +35,9 @@ export async function createProject(input: NewProjectInput): Promise<Project> {
       brand_file_name, brand_file_url,
       current_product_link, current_product_file_name, current_product_file_url,
       dieline_file_name, dieline_file_url,
-      inspiration_links, notes, site_type, platform, sku_count
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
+      inspiration_links, notes, site_type, platform, sku_count,
+      promo_code, discount_amount
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)
     RETURNING *`,
     [
       input.clientName,
@@ -57,6 +60,8 @@ export async function createProject(input: NewProjectInput): Promise<Project> {
       input.siteType,
       input.platform,
       input.skuCount,
+      input.promoCode,
+      input.discountAmount,
     ]
   );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

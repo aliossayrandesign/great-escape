@@ -28,6 +28,19 @@ CREATE TABLE IF NOT EXISTS projects (
   platform TEXT,
   sku_count INTEGER,
   revisions_used INTEGER NOT NULL DEFAULT 0,
+  promo_code TEXT,
+  discount_amount INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS promo_codes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code TEXT NOT NULL UNIQUE,
+  discount_type TEXT NOT NULL CHECK (discount_type IN ('percent', 'fixed')),
+  discount_value INTEGER NOT NULL,
+  max_uses INTEGER,
+  uses_count INTEGER NOT NULL DEFAULT 0,
+  expires_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

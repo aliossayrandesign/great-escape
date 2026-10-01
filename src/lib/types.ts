@@ -29,6 +29,8 @@ export type Project = {
   platform: string | null;
   skuCount: number | null;
   revisionsUsed: number;
+  promoCode: string | null;
+  discountAmount: number;
   createdAt: string;
 };
 
@@ -68,6 +70,8 @@ type ProjectRow = {
   platform: string | null;
   sku_count: number | null;
   revisions_used: number;
+  promo_code: string | null;
+  discount_amount: number;
   created_at: string;
 };
 
@@ -108,6 +112,8 @@ export function rowToProject(row: ProjectRow): Project {
     platform: row.platform,
     skuCount: row.sku_count,
     revisionsUsed: row.revisions_used,
+    promoCode: row.promo_code,
+    discountAmount: row.discount_amount,
     createdAt: row.created_at,
   };
 }

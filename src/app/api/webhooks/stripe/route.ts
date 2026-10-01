@@ -13,6 +13,7 @@ import {
   sendBalancePaidEmail,
 } from "@/lib/emails";
 import { parsePaymentMetadata } from "@/lib/payment-metadata";
+import { incrementPromoCodeUsage } from "@/lib/promo-codes";
 import type { ProductType } from "@/lib/products";
 
 const VALID_PRODUCTS: ProductType[] = ["website", "app", "deck", "package"];
@@ -119,7 +120,15 @@ export async function POST(request: Request) {
       siteType: parsed.siteType,
       platform: parsed.platform,
       skuCount: parsed.product === "package" ? parsed.skuCount : null,
+      promoCode: parsed.promoCode,
+      discountAmount: parsed.discountAmount,
     });
+
+    if (parsed.promoCodeId) {
+      await incrementPromoCodeUsage(parsed.promoCodeId).catch((err) =>
+        console.error("Webhook fallback: failed to increment promo code usage", err)
+      );
+    }
 
     console.warn(
       `Stripe webhook created project ${project.id} as a fallback — /api/create-project was never completed for payment intent ${paymentIntent.id}`
