@@ -72,7 +72,12 @@ export default async function AdminDashboardPage() {
                     </Link>
                     <div className="text-xs text-paper/40">{project.clientEmail}</div>
                   </td>
-                  <td className="px-5 py-4">{PRODUCT_LABEL[project.product]}</td>
+                  <td className="px-5 py-4">
+                    {PRODUCT_LABEL[project.product]}
+                    {project.product === "package" && project.skuCount
+                      ? ` · ${project.skuCount} SKU${project.skuCount === 1 ? "" : "s"}`
+                      : ""}
+                  </td>
                   <td className="px-5 py-4 font-mono">
                     ${project.price.toLocaleString()}
                   </td>

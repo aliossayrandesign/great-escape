@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { upload } from "@vercel/blob/client";
 import { PillButton } from "../ui/PillButton";
+import type { ProductType } from "@/lib/products";
 
 export type DetailsData = {
   name: string;
@@ -20,14 +21,17 @@ export type DetailsData = {
 type UploadState = "idle" | "uploading" | "done" | "error";
 
 export function DetailsStep({
+  product,
   initial,
   onContinue,
   onDirtyChange,
 }: {
+  product: ProductType | null;
   initial: DetailsData;
   onContinue: (data: DetailsData) => void;
   onDirtyChange?: (dirty: boolean) => void;
 }) {
+  const isPackage = product === "package";
   const [name, setName] = useState(initial.name);
   const [email, setEmail] = useState(initial.email);
   const [company, setCompany] = useState(initial.company);
@@ -253,7 +257,7 @@ export function DetailsStep({
 
         <div>
           <p className="mb-3 text-balance font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
-            Current Product
+            {isPackage ? "Existing Packaging" : "Current Product"}
           </p>
           <div
             onDragOver={(e) => {
@@ -279,7 +283,9 @@ export function DetailsStep({
             <p className="text-balance text-lg font-semibold">
               {currentProductFile
                 ? currentProductFile.name
-                : "Have an existing site, app, or deck?"}
+                : isPackage
+                  ? "Have an existing label or packaging?"
+                  : "Have an existing site, app, or deck?"}
             </p>
             {currentProductUploadState === "uploading" && (
               <p className="font-mono text-xs tracking-[0.1em] text-dark-400 uppercase">
@@ -356,7 +362,11 @@ export function DetailsStep({
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="What are we building, who's it for, and what should it feel like? Tone, must-haves, no-gos — anything that helps us nail it on the first pass."
+            placeholder={
+              isPackage
+                ? "What's the product, and what are the SKU names/flavors? Can, bottle, or box — and what size? Any print vendor or file spec requirements, required nutrition/regulatory panels, and the vibe you're going for."
+                : "What are we building, who's it for, and what should it feel like? Tone, must-haves, no-gos — anything that helps us nail it on the first pass."
+            }
             className="h-[300px] w-full resize-none rounded-[30px] bg-transparent p-8 text-base outline-none placeholder:text-dark-400 sm:h-[413px]"
           />
         </div>

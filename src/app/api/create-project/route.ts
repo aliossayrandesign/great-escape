@@ -2,13 +2,14 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { createProject } from "@/lib/projects";
 import { sendClientConfirmationEmail, sendInternalNotificationEmail } from "@/lib/emails";
-import { PRODUCT_PRICE, type ProductType } from "@/lib/products";
+import type { ProductType } from "@/lib/products";
 
 type CreateProjectPayload = {
   paymentIntentId: string;
   product: ProductType;
   siteType?: "ecommerce" | "marketing" | null;
   platform?: "shopify" | "framer" | "custom" | null;
+  skuCount?: number | null;
   details: {
     name: string;
     email: string;
@@ -42,14 +43,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Product mismatch" }, { status: 400 });
   }
 
-  const { details, product, siteType, platform } = body;
+  const { details, product, siteType, platform, skuCount } = body;
 
   const project = await createProject({
     clientName: details.name,
     clientEmail: details.email,
     company: details.company || null,
     product,
-    price: PRODUCT_PRICE[product],
+    // Store what Stripe actually charged, not a re-derived lookup — this
+    // stays correct even for variable pricing (e.g. package design scales
+    // with SKU count) and can never drift from the real charge.
+    price: paymentIntent.amount / 100,
     stripePaymentIntentId: paymentIntent.id,
     brandFileName: details.brandFileName,
     brandFileUrl: details.brandFileUrl,
@@ -60,6 +64,7 @@ export async function POST(request: Request) {
     notes: details.notes || null,
     siteType: siteType ?? null,
     platform: platform ?? null,
+    skuCount: product === "package" ? (skuCount ?? null) : null,
   });
 
   // Fire both emails in parallel — neither should block the customer's

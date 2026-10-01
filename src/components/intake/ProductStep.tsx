@@ -38,6 +38,17 @@ const PRODUCTS: {
     image: "/images/card-app-wide.png",
   },
   {
+    id: "package",
+    title: "Package Design",
+    description: "Label or packaging design for a single product.",
+    included: [
+      "Print-ready dieline & label design",
+      "Delivered as an Adobe Illustrator (.ai) file",
+      "Scales with SKUs — $500 per additional variant",
+    ],
+    image: "/images/card-package-wide.png",
+  },
+  {
     id: "deck",
     title: "Pitch Deck",
     description: "A deck built to raise, sell, or pitch.",
@@ -73,14 +84,14 @@ export function ProductStep({
         </p>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-6 sm:mt-10 sm:grid-cols-3 sm:gap-8">
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:mt-10 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
         {PRODUCTS.map((product) => {
           const isSelected = selected === product.id;
           return (
-            <div key={product.id} className="flex flex-col items-center">
+            <div key={product.id} className="flex h-full flex-col items-center">
               <button
                 onClick={() => onSelect(product.id)}
-                className={`group relative flex w-full flex-col overflow-hidden rounded-[28px] border border-panel-stroke bg-dark-950 text-left ring-2 transition-all duration-300 ${
+                className={`group relative flex w-full flex-1 flex-col overflow-hidden rounded-[28px] border border-panel-stroke bg-dark-950 text-left ring-2 transition-all duration-300 ${
                   isSelected
                     ? "ring-coral shadow-[0_0_70px_-12px_rgba(255,138,138,0.6)]"
                     : "ring-transparent hover:ring-dark-600"
@@ -105,6 +116,7 @@ export function ProductStep({
                     </h3>
                     <span className="shrink-0 rounded-full bg-dark-900/80 px-3 py-1 font-mono text-xs tracking-[0.1em] text-coral">
                       ${PRODUCT_PRICE[product.id].toLocaleString()}
+                      {product.id === "package" ? "+" : ""}
                     </span>
                   </div>
                   <p className="mt-3 text-pretty text-sm leading-relaxed text-paper/60">

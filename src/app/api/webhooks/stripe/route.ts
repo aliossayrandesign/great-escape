@@ -4,9 +4,9 @@ import { stripe } from "@/lib/stripe";
 import { createProject, getProjectByPaymentIntentId } from "@/lib/projects";
 import { sendClientConfirmationEmail, sendInternalNotificationEmail } from "@/lib/emails";
 import { parsePaymentMetadata } from "@/lib/payment-metadata";
-import { PRODUCT_PRICE, type ProductType } from "@/lib/products";
+import type { ProductType } from "@/lib/products";
 
-const VALID_PRODUCTS: ProductType[] = ["website", "app", "deck"];
+const VALID_PRODUCTS: ProductType[] = ["website", "app", "deck", "package"];
 
 // Fallback safety net: if the client's browser never completes its own
 // POST to /api/create-project right after a successful charge (closed tab,
@@ -59,7 +59,10 @@ export async function POST(request: Request) {
       clientEmail: parsed.email,
       company: parsed.company,
       product: parsed.product,
-      price: PRODUCT_PRICE[parsed.product],
+      // Use what Stripe actually charged, not a re-derived lookup — stays
+      // correct for variable pricing (e.g. package design scales with SKU
+      // count) and matches the same approach /api/create-project uses.
+      price: paymentIntent.amount / 100,
       stripePaymentIntentId: paymentIntent.id,
       brandFileName: parsed.brandFileName,
       brandFileUrl: parsed.brandFileUrl,
@@ -70,6 +73,7 @@ export async function POST(request: Request) {
       notes: parsed.notes,
       siteType: parsed.siteType,
       platform: parsed.platform,
+      skuCount: parsed.product === "package" ? parsed.skuCount : null,
     });
 
     console.warn(

@@ -2,6 +2,14 @@ import { getResend, ORDER_NOTIFICATION_TO } from "./resend";
 import { PRODUCT_LABEL } from "./products";
 import type { Project } from "./types";
 
+function productLabel(project: Project): string {
+  const label = PRODUCT_LABEL[project.product];
+  if (project.product === "package" && project.skuCount) {
+    return `${label} · ${project.skuCount} SKU${project.skuCount === 1 ? "" : "s"}`;
+  }
+  return label;
+}
+
 const SITE_URL = "https://great-escape-five.vercel.app";
 const MASON_BANNER = `${SITE_URL}/images/email/mason-caption.png`;
 const REVIEW_BANNER = `${SITE_URL}/images/email/review-caption.png`;
@@ -87,7 +95,7 @@ export async function sendClientConfirmationEmail(project: Project) {
         <td style="padding:24px 32px 28px;">
           ${label("Confirmed")}
           <div style="margin-top:8px; font-size:26px; font-weight:600; letter-spacing:-0.01em; color:#f3f3f3;">
-            ${escapeHtml(PRODUCT_LABEL[project.product])} · $${project.price.toLocaleString()}
+            ${escapeHtml(productLabel(project))} · $${project.price.toLocaleString()}
           </div>
           <p style="margin-top:14px; font-size:14px; line-height:1.6; color:#a8a8a8;">
             First look delivered within 1 week. Up to 3 rounds of revisions included.
@@ -122,7 +130,7 @@ export async function sendClientConfirmationEmail(project: Project) {
   );
 
   const text = [
-    `Confirmed: ${PRODUCT_LABEL[project.product]} · $${project.price.toLocaleString()}`,
+    `Confirmed: ${productLabel(project)} · $${project.price.toLocaleString()}`,
     `Track your project: ${projectUrl(project.id)}`,
     `First look delivered within 1 week. Up to 3 rounds of revisions included.`,
   ].join("\n");
@@ -146,7 +154,7 @@ export async function sendInternalNotificationEmail(project: Project) {
             ${escapeHtml(project.clientName)}
           </div>
           <div style="margin-top:4px; font-size:14px; color:#a8a8a8;">
-            ${escapeHtml(PRODUCT_LABEL[project.product])} · $${project.price.toLocaleString()}
+            ${escapeHtml(productLabel(project))} · $${project.price.toLocaleString()}
           </div>
           <a href="${adminProjectUrl(project.id)}" style="display:inline-block; margin-top:18px; padding:12px 22px; background:#f3f3f3; color:#0a0a0a; text-decoration:none; border-radius:999px; font-family:'SF Mono', ui-monospace, Menlo, monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
             Open in dashboard →
@@ -187,7 +195,7 @@ export async function sendInternalNotificationEmail(project: Project) {
 
   const text = [
     `New client: ${project.clientName}`,
-    `${PRODUCT_LABEL[project.product]} · $${project.price.toLocaleString()}`,
+    `${productLabel(project)} · $${project.price.toLocaleString()}`,
     `Dashboard: ${adminProjectUrl(project.id)}`,
   ].join("\n");
 

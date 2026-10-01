@@ -10,7 +10,7 @@ import {
 import type { StripeElementsOptions } from "@stripe/stripe-js";
 import Link from "next/link";
 import { getStripe } from "@/lib/stripe-client";
-import { PRODUCT_LABEL, PRODUCT_PRICE, type ProductType } from "@/lib/products";
+import { PRODUCT_LABEL, PRODUCT_PRICE, getPackagePrice, type ProductType } from "@/lib/products";
 import { PillButton } from "../ui/PillButton";
 import type { DetailsData } from "./DetailsStep";
 import type { Platform, SiteType } from "./PlatformStep";
@@ -20,12 +20,14 @@ async function createProject({
   product,
   siteType,
   platform,
+  skuCount,
   details,
 }: {
   paymentIntentId: string;
   product: ProductType;
   siteType: SiteType | null;
   platform: Platform | null;
+  skuCount: number | null;
   details: DetailsData;
 }) {
   const payload = JSON.stringify({
@@ -33,6 +35,7 @@ async function createProject({
     product,
     siteType,
     platform,
+    skuCount,
     details: {
       name: details.name,
       email: details.email,
@@ -135,12 +138,14 @@ function PaymentForm({
   product,
   siteType,
   platform,
+  skuCount,
   details,
   onSubmit,
 }: {
   product: ProductType;
   siteType: SiteType | null;
   platform: Platform | null;
+  skuCount: number | null;
   details: DetailsData;
   onSubmit: () => void;
 }) {
@@ -148,7 +153,7 @@ function PaymentForm({
   const elements = useElements();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const price = PRODUCT_PRICE[product];
+  const price = product === "package" ? getPackagePrice(skuCount ?? 1) : PRODUCT_PRICE[product];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -176,6 +181,7 @@ function PaymentForm({
         product,
         siteType,
         platform,
+        skuCount,
         details,
       });
     }
@@ -202,6 +208,7 @@ function PaymentForm({
           <div className="mt-6 flex items-center justify-between border-b border-dark-800 pb-4">
             <span className="text-lg font-semibold">
               {PRODUCT_LABEL[product]}
+              {product === "package" && skuCount ? ` · ${skuCount} SKU${skuCount === 1 ? "" : "s"}` : ""}
             </span>
             <span className="font-mono text-sm text-paper/70">
               ${price.toLocaleString()}
@@ -267,12 +274,14 @@ export function PaymentStep({
   product,
   siteType,
   platform,
+  skuCount,
   details,
   onSubmit,
 }: {
   product: ProductType;
   siteType: SiteType | null;
   platform: Platform | null;
+  skuCount: number | null;
   details: DetailsData;
   onSubmit: () => void;
 }) {
@@ -289,6 +298,7 @@ export function PaymentStep({
         product,
         siteType,
         platform,
+        skuCount,
         details: {
           name: details.name,
           email: details.email,
@@ -358,6 +368,7 @@ export function PaymentStep({
         product={product}
         siteType={siteType}
         platform={platform}
+        skuCount={skuCount}
         details={details}
         onSubmit={onSubmit}
       />

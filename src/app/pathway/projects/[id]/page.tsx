@@ -33,6 +33,7 @@ type Project = {
   notes: string | null;
   siteType: string | null;
   platform: string | null;
+  skuCount: number | null;
   revisionsUsed: number;
   createdAt: string;
 };
@@ -144,7 +145,11 @@ export default function AdminProjectPage({
           </div>
           <div className="text-right">
             <div className="text-xl font-semibold">
-              {PRODUCT_LABEL[project.product]} · ${project.price.toLocaleString()}
+              {PRODUCT_LABEL[project.product]}
+              {project.product === "package" && project.skuCount
+                ? ` · ${project.skuCount} SKU${project.skuCount === 1 ? "" : "s"}`
+                : ""}{" "}
+              · ${project.price.toLocaleString()}
             </div>
             <div className="mt-1 flex gap-2">
               {(["in_progress", "in_review", "delivered"] as const).map((s) => (

@@ -11,15 +11,17 @@ import {
   type Platform,
   type SiteType,
 } from "@/components/intake/PlatformStep";
+import { PackageStep } from "@/components/intake/PackageStep";
 import { DetailsStep, type DetailsData } from "@/components/intake/DetailsStep";
 import { PaymentStep } from "@/components/intake/PaymentStep";
 import { ConfirmationStep } from "@/components/intake/ConfirmationStep";
 
-type StepName = "product" | "platform" | "details" | "payment" | "confirmation";
+type StepName = "product" | "platform" | "package" | "details" | "payment" | "confirmation";
 
 const STEP_LABELS: Record<StepName, string> = {
   product: "PRODUCT",
   platform: "PLATFORM",
+  package: "PACKAGE",
   details: "DETAILS",
   payment: "PAYMENT",
   confirmation: "",
@@ -37,7 +39,7 @@ const EMPTY_DETAILS: DetailsData = {
   links: [],
   notes: "",
 };
-const VALID_PRODUCTS: ProductType[] = ["website", "app", "deck"];
+const VALID_PRODUCTS: ProductType[] = ["website", "app", "deck", "package"];
 
 export default function StartPage() {
   return (
@@ -57,6 +59,7 @@ function StartPageInner() {
   const [product, setProduct] = useState<ProductType | null>(initialProduct);
   const [siteType, setSiteType] = useState<SiteType | null>(null);
   const [platform, setPlatform] = useState<Platform | null>(null);
+  const [skuCount, setSkuCount] = useState<number | null>(null);
   const [details, setDetails] = useState<DetailsData>(EMPTY_DETAILS);
   const [detailsDirty, setDetailsDirty] = useState(false);
   const dirty = product !== null || detailsDirty;
@@ -64,15 +67,19 @@ function StartPageInner() {
   const [stepName, setStepName] = useState<StepName>(
     initialProduct === "website"
       ? "platform"
-      : initialProduct
-        ? "details"
-        : "product"
+      : initialProduct === "package"
+        ? "package"
+        : initialProduct
+          ? "details"
+          : "product"
   );
 
   const steps: StepName[] =
     product === "website"
       ? ["product", "platform", "details", "payment"]
-      : ["product", "details", "payment"];
+      : product === "package"
+        ? ["product", "package", "details", "payment"]
+        : ["product", "details", "payment"];
   const stepIndex = steps.indexOf(stepName);
   const goTo = (name: StepName) => setStepName(name);
   const goBack = () => {
@@ -104,7 +111,13 @@ function StartPageInner() {
               selected={product}
               onSelect={setProduct}
               onContinue={() =>
-                goTo(product === "website" ? "platform" : "details")
+                goTo(
+                  product === "website"
+                    ? "platform"
+                    : product === "package"
+                      ? "package"
+                      : "details"
+                )
               }
             />
           )}
@@ -117,8 +130,16 @@ function StartPageInner() {
               onContinue={() => goTo("details")}
             />
           )}
+          {stepName === "package" && (
+            <PackageStep
+              skuCount={skuCount}
+              onSelect={setSkuCount}
+              onContinue={() => goTo("details")}
+            />
+          )}
           {stepName === "details" && (
             <DetailsStep
+              product={product}
               initial={details}
               onContinue={(data) => {
                 setDetails(data);
@@ -132,6 +153,7 @@ function StartPageInner() {
               product={product}
               siteType={siteType}
               platform={platform}
+              skuCount={skuCount}
               details={details}
               onSubmit={() => goTo("confirmation")}
             />

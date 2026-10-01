@@ -11,6 +11,7 @@ type BriefDetails = {
   currentProductLink?: string | null;
   links?: string[];
   notes?: string | null;
+  skuCount?: number | null;
 };
 
 const MAX_VALUE_LENGTH = 490; // Stripe caps each metadata value at 500 chars
@@ -45,6 +46,7 @@ export function buildPaymentMetadata(
     currentProductLink: clip(details.currentProductLink),
     notes: clip(details.notes),
     links: clip((details.links ?? []).filter(Boolean).join("|")),
+    skuCount: details.skuCount != null ? String(details.skuCount) : "",
   };
 }
 
@@ -63,5 +65,6 @@ export function parsePaymentMetadata(metadata: Record<string, string>) {
     currentProductLink: metadata.currentProductLink || null,
     notes: metadata.notes || null,
     links: metadata.links ? metadata.links.split("|").filter(Boolean) : [],
+    skuCount: metadata.skuCount ? Number(metadata.skuCount) : null,
   };
 }

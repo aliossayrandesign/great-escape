@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS projects (
   notes TEXT,
   site_type TEXT,
   platform TEXT,
+  sku_count INTEGER,
   revisions_used INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

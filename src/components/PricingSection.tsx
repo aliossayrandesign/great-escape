@@ -17,6 +17,11 @@ const PLANS = [
     description: "A product interface — screens, flows, and states.",
   },
   {
+    id: "package",
+    title: "Package Design",
+    description: "Label or packaging design for a single product.",
+  },
+  {
     id: "deck",
     title: "Pitch Deck",
     description: "A deck built to raise, sell, or pitch.",
@@ -60,7 +65,7 @@ export function PricingSection() {
         </p>
       </div>
 
-      <div className="relative mt-16 grid grid-cols-1 gap-6 sm:mt-20 sm:grid-cols-3 sm:gap-8">
+      <div className="relative mt-16 grid grid-cols-1 gap-6 sm:mt-20 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
         {PLANS.map((plan, i) => (
           <motion.div
             key={plan.id}
@@ -78,6 +83,7 @@ export function PricingSection() {
             </p>
             <div className="mt-6 text-5xl font-semibold tracking-tight">
               ${PRODUCT_PRICE[plan.id].toLocaleString()}
+              {plan.id === "package" ? "+" : ""}
             </div>
             <div className="mt-8 flex-1 space-y-3 border-t border-paper/10 pt-7">
               {INCLUDED.map((item) => (

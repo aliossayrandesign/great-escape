@@ -21,6 +21,7 @@ export type Project = {
   notes: string | null;
   siteType: string | null;
   platform: string | null;
+  skuCount: number | null;
   revisionsUsed: number;
   createdAt: string;
 };
@@ -53,6 +54,7 @@ type ProjectRow = {
   notes: string | null;
   site_type: string | null;
   platform: string | null;
+  sku_count: number | null;
   revisions_used: number;
   created_at: string;
 };
@@ -86,6 +88,7 @@ export function rowToProject(row: ProjectRow): Project {
     notes: row.notes,
     siteType: row.site_type,
     platform: row.platform,
+    skuCount: row.sku_count,
     revisionsUsed: row.revisions_used,
     createdAt: row.created_at,
   };

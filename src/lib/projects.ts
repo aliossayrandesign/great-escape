@@ -18,6 +18,7 @@ type NewProjectInput = {
   notes: string | null;
   siteType: string | null;
   platform: string | null;
+  skuCount: number | null;
 };
 
 export async function createProject(input: NewProjectInput): Promise<Project> {
@@ -26,8 +27,8 @@ export async function createProject(input: NewProjectInput): Promise<Project> {
       client_name, client_email, company, product, price,
       stripe_payment_intent_id, brand_file_name, brand_file_url,
       current_product_link, current_product_file_name, current_product_file_url,
-      inspiration_links, notes, site_type, platform
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
+      inspiration_links, notes, site_type, platform, sku_count
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
     RETURNING *`,
     [
       input.clientName,
@@ -45,6 +46,7 @@ export async function createProject(input: NewProjectInput): Promise<Project> {
       input.notes,
       input.siteType,
       input.platform,
+      input.skuCount,
     ]
   );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
