@@ -36,6 +36,8 @@ const EMPTY_DETAILS: DetailsData = {
   currentProductFile: null,
   currentProductFileUrl: null,
   currentProductLink: "",
+  dielineFile: null,
+  dielineFileUrl: null,
   links: [],
   notes: "",
 };

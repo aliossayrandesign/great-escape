@@ -19,6 +19,8 @@ type CreateProjectPayload = {
     currentProductFileName: string | null;
     currentProductFileUrl: string | null;
     currentProductLink: string;
+    dielineFileName?: string | null;
+    dielineFileUrl?: string | null;
     links: string[];
     notes: string;
   };
@@ -60,6 +62,8 @@ export async function POST(request: Request) {
     currentProductLink: details.currentProductLink || null,
     currentProductFileName: details.currentProductFileName,
     currentProductFileUrl: details.currentProductFileUrl,
+    dielineFileName: details.dielineFileName ?? null,
+    dielineFileUrl: details.dielineFileUrl ?? null,
     inspirationLinks: details.links.filter((l) => l.trim()),
     notes: details.notes || null,
     siteType: siteType ?? null,

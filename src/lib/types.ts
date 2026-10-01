@@ -17,6 +17,8 @@ export type Project = {
   currentProductLink: string | null;
   currentProductFileName: string | null;
   currentProductFileUrl: string | null;
+  dielineFileName: string | null;
+  dielineFileUrl: string | null;
   inspirationLinks: string[];
   notes: string | null;
   siteType: string | null;
@@ -50,6 +52,8 @@ type ProjectRow = {
   current_product_link: string | null;
   current_product_file_name: string | null;
   current_product_file_url: string | null;
+  dieline_file_name: string | null;
+  dieline_file_url: string | null;
   inspiration_links: string[];
   notes: string | null;
   site_type: string | null;
@@ -84,6 +88,8 @@ export function rowToProject(row: ProjectRow): Project {
     currentProductLink: row.current_product_link,
     currentProductFileName: row.current_product_file_name,
     currentProductFileUrl: row.current_product_file_url,
+    dielineFileName: row.dieline_file_name,
+    dielineFileUrl: row.dieline_file_url,
     inspirationLinks: row.inspiration_links,
     notes: row.notes,
     siteType: row.site_type,

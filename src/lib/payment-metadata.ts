@@ -9,6 +9,8 @@ type BriefDetails = {
   currentProductFileName?: string | null;
   currentProductFileUrl?: string | null;
   currentProductLink?: string | null;
+  dielineFileName?: string | null;
+  dielineFileUrl?: string | null;
   links?: string[];
   notes?: string | null;
   skuCount?: number | null;
@@ -44,6 +46,8 @@ export function buildPaymentMetadata(
     currentProductFileName: clip(details.currentProductFileName),
     currentProductFileUrl: clip(details.currentProductFileUrl),
     currentProductLink: clip(details.currentProductLink),
+    dielineFileName: clip(details.dielineFileName),
+    dielineFileUrl: clip(details.dielineFileUrl),
     notes: clip(details.notes),
     links: clip((details.links ?? []).filter(Boolean).join("|")),
     skuCount: details.skuCount != null ? String(details.skuCount) : "",
@@ -63,6 +67,8 @@ export function parsePaymentMetadata(metadata: Record<string, string>) {
     currentProductFileName: metadata.currentProductFileName || null,
     currentProductFileUrl: metadata.currentProductFileUrl || null,
     currentProductLink: metadata.currentProductLink || null,
+    dielineFileName: metadata.dielineFileName || null,
+    dielineFileUrl: metadata.dielineFileUrl || null,
     notes: metadata.notes || null,
     links: metadata.links ? metadata.links.split("|").filter(Boolean) : [],
     skuCount: metadata.skuCount ? Number(metadata.skuCount) : null,

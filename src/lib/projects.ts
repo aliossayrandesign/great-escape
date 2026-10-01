@@ -14,6 +14,8 @@ type NewProjectInput = {
   currentProductLink: string | null;
   currentProductFileName: string | null;
   currentProductFileUrl: string | null;
+  dielineFileName: string | null;
+  dielineFileUrl: string | null;
   inspirationLinks: string[];
   notes: string | null;
   siteType: string | null;
@@ -27,8 +29,9 @@ export async function createProject(input: NewProjectInput): Promise<Project> {
       client_name, client_email, company, product, price,
       stripe_payment_intent_id, brand_file_name, brand_file_url,
       current_product_link, current_product_file_name, current_product_file_url,
+      dieline_file_name, dieline_file_url,
       inspiration_links, notes, site_type, platform, sku_count
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
     RETURNING *`,
     [
       input.clientName,
@@ -42,6 +45,8 @@ export async function createProject(input: NewProjectInput): Promise<Project> {
       input.currentProductLink,
       input.currentProductFileName,
       input.currentProductFileUrl,
+      input.dielineFileName,
+      input.dielineFileUrl,
       input.inspirationLinks,
       input.notes,
       input.siteType,

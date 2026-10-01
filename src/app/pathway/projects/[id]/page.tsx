@@ -29,6 +29,8 @@ type Project = {
   currentProductLink: string | null;
   currentProductFileName: string | null;
   currentProductFileUrl: string | null;
+  dielineFileName: string | null;
+  dielineFileUrl: string | null;
   inspirationLinks: string[];
   notes: string | null;
   siteType: string | null;
@@ -202,6 +204,18 @@ export default function AdminProjectPage({
               )}
             </p>
           </div>
+          {project.dielineFileUrl && (
+            <div className="rounded-[20px] border border-panel-stroke bg-dark-900/40 p-5">
+              <p className="font-mono text-[10px] tracking-[0.15em] text-dark-400 uppercase">
+                Dieline
+              </p>
+              <p className="mt-2 text-sm">
+                <a href={project.dielineFileUrl} className="text-coral hover:underline">
+                  {project.dielineFileName} →
+                </a>
+              </p>
+            </div>
+          )}
           {project.inspirationLinks.length > 0 && (
             <div className="rounded-[20px] border border-panel-stroke bg-dark-900/40 p-5">
               <p className="font-mono text-[10px] tracking-[0.15em] text-dark-400 uppercase">

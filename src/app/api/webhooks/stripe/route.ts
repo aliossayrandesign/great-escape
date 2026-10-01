@@ -69,6 +69,8 @@ export async function POST(request: Request) {
       currentProductLink: parsed.currentProductLink,
       currentProductFileName: parsed.currentProductFileName,
       currentProductFileUrl: parsed.currentProductFileUrl,
+      dielineFileName: parsed.dielineFileName,
+      dielineFileUrl: parsed.dielineFileUrl,
       inspirationLinks: parsed.links,
       notes: parsed.notes,
       siteType: parsed.siteType,

@@ -14,6 +14,8 @@ export type DetailsData = {
   currentProductFile: File | null;
   currentProductFileUrl: string | null;
   currentProductLink: string;
+  dielineFile: File | null;
+  dielineFileUrl: string | null;
   links: string[];
   notes: string;
 };
@@ -53,6 +55,15 @@ export function DetailsStep({
   const [currentProductLink, setCurrentProductLink] = useState(
     initial.currentProductLink
   );
+  const [dielineFile, setDielineFile] = useState<File | null>(initial.dielineFile);
+  const [dielineFileUrl, setDielineFileUrl] = useState<string | null>(
+    initial.dielineFileUrl
+  );
+  const [dielineUploadState, setDielineUploadState] = useState<UploadState>(
+    initial.dielineFileUrl ? "done" : "idle"
+  );
+  const [isDraggingDieline, setIsDraggingDieline] = useState(false);
+  const dielineInputRef = useRef<HTMLInputElement>(null);
   const [links, setLinks] = useState<string[]>(
     initial.links.length ? initial.links : [""]
   );
@@ -81,6 +92,7 @@ export function DetailsStep({
           brandFile ||
           currentProductFile ||
           currentProductLink ||
+          dielineFile ||
           links.some((l) => l) ||
           notes
       )
@@ -92,6 +104,7 @@ export function DetailsStep({
     brandFile,
     currentProductFile,
     currentProductLink,
+    dielineFile,
     links,
     notes,
     onDirtyChange,
@@ -158,6 +171,27 @@ export function DetailsStep({
       .catch(() => setCurrentProductUploadState("error"));
   };
 
+  const handleDielineFiles = (files: FileList | null) => {
+    const file = files?.[0];
+    if (!file) return;
+    setDielineFile(file);
+    setDielineFileUrl(null);
+    setDielineUploadState("uploading");
+    getUploadToken()
+      .then((token) =>
+        upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+          clientPayload: token,
+        })
+      )
+      .then((blob) => {
+        setDielineFileUrl(blob.url);
+        setDielineUploadState("done");
+      })
+      .catch(() => setDielineUploadState("error"));
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-6 pt-6 pb-40 sm:px-10">
       <div className="text-center">
@@ -206,7 +240,7 @@ export function DetailsStep({
         </div>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 gap-10 sm:grid-cols-3">
+      <div className={`mt-10 grid grid-cols-1 gap-10 sm:grid-cols-3 ${isPackage ? "lg:grid-cols-4" : ""}`}>
         <div>
           <p className="mb-3 text-balance font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
             Brand Guidelines
@@ -315,6 +349,59 @@ export function DetailsStep({
           </div>
         </div>
 
+        {isPackage && (
+          <div>
+            <p className="mb-3 text-balance font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
+              Dielines
+            </p>
+            <label
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDraggingDieline(true);
+              }}
+              onDragLeave={() => setIsDraggingDieline(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setIsDraggingDieline(false);
+                handleDielineFiles(e.dataTransfer.files);
+              }}
+              className={`flex h-[275px] cursor-pointer flex-col items-center justify-center gap-3 rounded-[30px] border border-panel-stroke bg-dark-950 p-4 text-center transition-colors ${
+                isDraggingDieline ? "bg-dark-800" : ""
+              }`}
+            >
+              <input
+                ref={dielineInputRef}
+                type="file"
+                className="hidden"
+                onChange={(e) => handleDielineFiles(e.target.files)}
+              />
+              <p className="text-balance text-lg font-semibold">
+                {dielineFile ? dielineFile.name : "Have a dieline template?"}
+              </p>
+              <p className="text-pretty text-xs text-paper/40">
+                From your printer or manufacturer, if you have one
+              </p>
+              {dielineUploadState === "uploading" && (
+                <p className="font-mono text-xs tracking-[0.1em] text-dark-400 uppercase">
+                  Uploading…
+                </p>
+              )}
+              {dielineUploadState === "error" && (
+                <p className="font-mono text-xs tracking-[0.1em] text-coral uppercase">
+                  Upload failed — try again
+                </p>
+              )}
+              <button
+                type="button"
+                onClick={() => dielineInputRef.current?.click()}
+                className="rounded-full border border-dark-600 px-6 py-2.5 font-mono text-xs tracking-[0.15em] uppercase hover:border-paper"
+              >
+                Browse files
+              </button>
+            </label>
+          </div>
+        )}
+
         <div>
           <p className="mb-3 text-balance font-mono text-xs tracking-[0.15em] text-dark-400 uppercase">
             Inspiration Links
@@ -373,7 +460,8 @@ export function DetailsStep({
 
         <div className="mt-6 flex flex-col items-end gap-2">
           {(brandUploadState === "uploading" ||
-            currentProductUploadState === "uploading") && (
+            currentProductUploadState === "uploading" ||
+            dielineUploadState === "uploading") && (
             <p className="font-mono text-xs tracking-[0.1em] text-dark-400 uppercase">
               Finishing upload…
             </p>
@@ -392,7 +480,8 @@ export function DetailsStep({
             variant="paper"
             disabled={
               brandUploadState === "uploading" ||
-              currentProductUploadState === "uploading"
+              currentProductUploadState === "uploading" ||
+              dielineUploadState === "uploading"
             }
             onClick={() => {
               if (missingContact || missingBrief) {
@@ -408,6 +497,8 @@ export function DetailsStep({
                 currentProductFile,
                 currentProductFileUrl,
                 currentProductLink,
+                dielineFile,
+                dielineFileUrl,
                 links,
                 notes,
               });

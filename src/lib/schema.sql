@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS projects (
   current_product_link TEXT,
   current_product_file_name TEXT,
   current_product_file_url TEXT,
+  dieline_file_name TEXT,
+  dieline_file_url TEXT,
   inspiration_links TEXT[] NOT NULL DEFAULT '{}',
   notes TEXT,
   site_type TEXT,

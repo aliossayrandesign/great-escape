@@ -16,6 +16,7 @@ const TOOLS = {
   code: { label: "Custom code", icon: "/images/platforms/custom-code.svg", w: 24, h: 24 },
   figma: { label: "Figma", icon: "/images/platforms/figma.svg", w: 24, h: 24 },
   pdf: { label: "PDF", icon: "/images/platforms/pdf.svg", w: 24, h: 24 },
+  ai: { label: "Adobe Illustrator (.ai)", icon: "/images/platforms/ai-file.svg", w: 559, h: 430, heightClass: "h-3.5" },
 };
 
 const PRODUCTS = [
@@ -54,8 +55,24 @@ const PRODUCTS = [
     tools: [TOOLS.figma, TOOLS.code],
   },
   {
-    id: "deck",
+    id: "package",
     number: "03",
+    title: "Package Design",
+    tagline: "A label that sells itself off the shelf.",
+    description:
+      "Can, bottle, or box — a complete label system designed around your brand, built to actual print specs so it goes straight to your printer without a round of fixes.",
+    included: [
+      "Print-ready dieline & label design",
+      "Delivered as a print-ready Adobe Illustrator (.ai) file",
+      "Pantone/CMYK color-accurate artwork",
+      "Scales with SKUs — $500 per additional variant",
+    ],
+    image: "/images/card-package.png",
+    tools: [TOOLS.ai, TOOLS.pdf],
+  },
+  {
+    id: "deck",
+    number: "04",
     title: "Pitch Deck",
     tagline: "The story that gets you the yes.",
     description:
@@ -108,7 +125,7 @@ function ProductPanel({ product }: { product: Product }) {
                 alt={tool.label}
                 width={tool.w}
                 height={tool.h}
-                className="h-5 w-auto opacity-60"
+                className={`w-auto opacity-60 ${"heightClass" in tool ? tool.heightClass : "h-5"}`}
               />
               <span className="font-mono text-xs tracking-[0.1em] text-paper/50 uppercase">
                 {tool.label}
