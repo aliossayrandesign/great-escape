@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getProject, listRevisions } from "@/lib/projects";
+import { isAdminRequest } from "@/lib/admin-auth";
+import { getProject, listRevisions, deleteProject } from "@/lib/projects";
 
 // Intentionally not admin-gated — the project id itself is the magic-link
 // credential the client was emailed. Anyone with the (unguessable) id can
@@ -15,4 +16,17 @@ export async function GET(
   }
   const revisions = await listRevisions(id);
   return NextResponse.json({ project, revisions });
+}
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  if (!(await isAdminRequest())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+  await deleteProject(id);
+  return NextResponse.json({ ok: true });
 }

@@ -108,6 +108,10 @@ export async function markBalancePaid(id: string) {
   );
 }
 
+export async function deleteProject(id: string) {
+  await query(`DELETE FROM projects WHERE id = $1`, [id]);
+}
+
 export async function listProjects(): Promise<Project[]> {
   const result = await query(`SELECT * FROM projects ORDER BY created_at DESC`);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

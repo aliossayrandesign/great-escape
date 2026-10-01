@@ -2,6 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { PRODUCT_LABEL, type ProductType } from "@/lib/products";
 import { PillButton } from "@/components/ui/PillButton";
 import { SimpleNav } from "@/components/SimpleNav";
@@ -55,6 +56,7 @@ export default function AdminProjectPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const router = useRouter();
   const [project, setProject] = useState<Project | null>(null);
   const [revisions, setRevisions] = useState<Revision[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,6 +64,7 @@ export default function AdminProjectPage({
   const [posting, setPosting] = useState(false);
   const [projectLink, setProjectLink] = useState("");
   const [delivering, setDelivering] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const load = async () => {
     const res = await fetch(`/api/projects/${id}`);
@@ -114,6 +117,17 @@ export default function AdminProjectPage({
     load();
   };
 
+  const handleDelete = async () => {
+    if (!project) return;
+    const confirmed = window.confirm(
+      `Permanently delete ${project.clientName}'s project? This can't be undone.`
+    );
+    if (!confirmed) return;
+    setDeleting(true);
+    await fetch(`/api/projects/${id}`, { method: "DELETE" });
+    router.push("/pathway");
+  };
+
   if (loading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-dark-950">
@@ -136,9 +150,18 @@ export default function AdminProjectPage({
     <main className="min-h-screen bg-dark-950 px-6 pt-[81px] pb-16 sm:px-10 sm:pt-[105px]">
       <SimpleNav />
       <div className="mx-auto max-w-3xl py-10">
-        <Link href="/pathway" className="font-mono text-xs tracking-[0.1em] text-paper/40 uppercase hover:text-paper">
-          ‹ All projects
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/pathway" className="font-mono text-xs tracking-[0.1em] text-paper/40 uppercase hover:text-paper">
+            ‹ All projects
+          </Link>
+          <button
+            onClick={handleDelete}
+            disabled={deleting}
+            className="font-mono text-xs tracking-[0.1em] text-paper/30 uppercase hover:text-coral"
+          >
+            {deleting ? "Deleting…" : "Delete project"}
+          </button>
+        </div>
 
         <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
           <div>
