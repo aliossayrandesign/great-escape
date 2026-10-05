@@ -85,11 +85,11 @@ export function ProductStep({
         </p>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-6 sm:mt-10 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
+      <div className="mt-8 grid grid-cols-1 items-start gap-6 sm:mt-10 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
         {PRODUCTS.map((product) => {
           const isSelected = selected === product.id;
           return (
-            <div key={product.id} className="flex h-full flex-col items-center">
+            <div key={product.id} className="flex flex-col items-center">
               <button
                 onClick={() => onSelect(product.id)}
                 className={`group relative flex w-full flex-1 flex-col overflow-hidden rounded-[28px] border border-panel-stroke bg-dark-950 text-left ring-2 transition-all duration-300 ${
