@@ -65,7 +65,7 @@ const PRODUCTS = [
       "Print-ready dieline & label design",
       "Delivered as a print-ready Adobe Illustrator (.ai) file",
       "Pantone/CMYK color-accurate artwork",
-      "Scales with SKUs — $500 per additional variant",
+      "Scales with SKUs — $600 per additional variant",
     ],
     image: "/images/card-package.png",
     tools: [TOOLS.ai, TOOLS.pdf],

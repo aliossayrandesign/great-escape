@@ -44,7 +44,7 @@ const PRODUCTS: {
     included: [
       "Print-ready dieline & label design",
       "Delivered as an Adobe Illustrator (.ai) file",
-      "Scales with SKUs — $500 per additional variant",
+      "Scales with SKUs — $600 per additional variant",
     ],
     image: "/images/card-package-wide.png",
   },

@@ -12,15 +12,15 @@ export const PRODUCT_LABEL: Record<ProductType, string> = {
 // "package" is the base price for a single SKU — see getPackagePrice below
 // for how additional SKUs add to it.
 export const PRODUCT_PRICE: Record<ProductType, number> = {
-  website: 2500,
-  app: 4500,
-  deck: 1000,
-  package: 1500,
+  website: 3500,
+  app: 7000,
+  deck: 2500,
+  package: 2000,
 };
 
 export const PACKAGE_MIN_SKUS = 1;
 export const PACKAGE_MAX_SKUS = 5; // beyond this, custom quote only — no automatic checkout
-export const PACKAGE_SKU_INCREMENT = 500; // added per SKU beyond the first
+export const PACKAGE_SKU_INCREMENT = 600; // added per SKU beyond the first
 
 export function getPackagePrice(skuCount: number): number {
   const clamped = Math.min(Math.max(skuCount, PACKAGE_MIN_SKUS), PACKAGE_MAX_SKUS);
