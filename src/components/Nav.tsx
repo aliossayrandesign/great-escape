@@ -68,7 +68,7 @@ export function Nav() {
         >
           <Image
             src="/images/nav-cta.svg"
-            alt="Start your escape"
+            alt="Start Your Project"
             width={328}
             height={70}
             className="h-14 w-auto"
@@ -79,7 +79,7 @@ export function Nav() {
       <Link href="/start" className="md:hidden">
         <Image
           src="/images/nav-cta.svg"
-          alt="Start your escape"
+          alt="Start Your Project"
           width={328}
           height={70}
           className="h-10 w-auto"

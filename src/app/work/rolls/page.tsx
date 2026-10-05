@@ -37,7 +37,7 @@ export default function RollsCaseStudy() {
         >
           <Image
             src="/images/nav-cta.svg"
-            alt="Start your escape"
+            alt="Start Your Project"
             width={328}
             height={70}
             className="h-10 w-auto sm:h-14"
@@ -74,7 +74,7 @@ export default function RollsCaseStudy() {
             >
               <Image
                 src="/images/nav-cta.svg"
-                alt="Start your escape"
+                alt="Start Your Project"
                 width={328}
                 height={70}
                 className="h-14 w-auto"

@@ -42,7 +42,7 @@ export function CTASection() {
           >
             <Image
               src="/images/nav-cta.svg"
-              alt="Start your escape"
+              alt="Start Your Project"
               width={328}
               height={70}
               className="h-14 w-auto"
