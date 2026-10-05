@@ -34,6 +34,7 @@ const PRODUCTS: {
       "Onboarding + core product flows",
       "Every state: empty, loading, error",
       "Dev-ready specs & exportable assets",
+      "Complex products quoted separately",
     ],
     image: "/images/card-app-wide.png",
   },
@@ -42,7 +43,7 @@ const PRODUCTS: {
     title: "Package Design",
     description: "Label or packaging design for your product(s).",
     included: [
-      "Print-ready dieline & label design",
+      "Print-ready packaging & label artwork",
       "Delivered as an Adobe Illustrator (.ai) file",
       "Scales with SKUs — $600 per adaptation of your master design",
     ],

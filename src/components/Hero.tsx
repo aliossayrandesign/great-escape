@@ -55,6 +55,15 @@ export function Hero() {
               out. Fully designed, ready to ship.
             </motion.p>
 
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+              className="mt-4 font-mono text-xs tracking-[0.15em] text-paper/40 uppercase"
+            >
+              Websites · Apps · Packaging · Pitch Decks
+            </motion.p>
+
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}

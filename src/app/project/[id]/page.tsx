@@ -169,7 +169,7 @@ export default function ClientProjectPage({
 
           {project.status !== "delivered" && (
             <p className="mt-6 text-center font-mono text-xs tracking-[0.1em] text-paper/40 uppercase">
-              Estimated delivery:{" "}
+              Estimated first look:{" "}
               <span className="text-paper/70">
                 {estimatedDelivery.toLocaleDateString(undefined, {
                   month: "long",

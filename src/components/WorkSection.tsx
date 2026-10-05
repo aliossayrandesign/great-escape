@@ -41,15 +41,16 @@ const PRODUCTS = [
     id: "app",
     number: "02",
     title: "App Design & Build",
-    tagline: "Every screen your product needs — designed, and built.",
+    tagline: "Your core product experience, mapped and designed.",
     description:
-      "From first open to your core loop — onboarding, empty states, edge cases — designed in full, then built into a working MVP within an agreed scope.",
+      "From first open to your core loop — onboarding, empty states, edge cases — your core experience designed in full, then built into a working MVP.",
     included: [
       "Onboarding + core product flows",
       "Every state: empty, loading, error",
       "A clickable prototype to test with real users",
       "Dev-ready specs & exportable assets",
       "Light & dark variants",
+      "Complex products and additional flows quoted separately",
     ],
     image: "/images/card-app.png",
     tools: [TOOLS.figma, TOOLS.code],
@@ -62,7 +63,7 @@ const PRODUCTS = [
     description:
       "A complete label system designed around your brand, built to actual print specs so it goes straight to your printer.",
     included: [
-      "Print-ready dieline & label design",
+      "Print-ready packaging & label artwork",
       "Delivered as a print-ready Adobe Illustrator (.ai) file",
       "Pantone/CMYK color-accurate artwork",
       "Scales with SKUs — $600 per adaptation of your master design",

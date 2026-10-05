@@ -20,9 +20,9 @@ const STEPS = [
   },
   {
     number: "03",
-    title: "Your finished product",
+    title: "Your first look",
     description:
-      "A launch-ready product built to help you win, not just look good.",
+      "Delivered within a week — then we refine it together until it's ready to launch.",
     image: "/images/process-03-v12.png",
     accent: true,
   },

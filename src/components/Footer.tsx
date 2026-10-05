@@ -26,6 +26,10 @@ export function Footer() {
           <p className="max-w-xs text-pretty text-sm text-paper/50">
             Creative Studio based in Los Angeles, CA.
           </p>
+          <p className="max-w-xs text-pretty text-sm text-paper/50">
+            Built for founders and teams who need senior creative work
+            without the agency process.
+          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-x-8 gap-y-4">

@@ -29,9 +29,9 @@ const PLANS = [
 ] as const;
 
 const INCLUDED = [
-  "First look in 1 week",
+  "First look in one week",
   "Up to 3 rounds of revisions",
-  "Creative-directed from first pass to final.",
+  "Senior creative direction throughout.",
 ];
 
 export function PricingSection() {

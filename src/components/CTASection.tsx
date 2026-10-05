@@ -32,8 +32,8 @@ export function CTASection() {
           Your next project is one <span className="text-coral">brief</span> away.
         </h2>
         <p className="mx-auto mt-5 max-w-md text-pretty text-paper/60">
-          Tell us your product. Get back a fully designed website, app, or
-          pitch deck in a week — no meetings required.
+          Tell us what you&apos;re building. Get your first look in one week
+          — no meetings required.
         </p>
         <div className="mt-10 flex justify-center">
           <Link
