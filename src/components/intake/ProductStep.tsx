@@ -45,7 +45,7 @@ const PRODUCTS: {
     included: [
       "Print-ready packaging & label artwork",
       "Delivered as an Adobe Illustrator (.ai) file",
-      "Scales with SKUs — $600 per adaptation of your master design",
+      "Scales with SKUs — $500 per adaptation of your master design",
     ],
     image: "/images/card-package-wide.png",
   },

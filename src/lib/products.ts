@@ -29,7 +29,7 @@ export const PRODUCT_PRICE_STARTS_AT: Record<ProductType, boolean> = {
 
 export const PACKAGE_MIN_SKUS = 1;
 export const PACKAGE_MAX_SKUS = 5; // beyond this, custom quote only — no automatic checkout
-export const PACKAGE_SKU_INCREMENT = 600; // added per SKU beyond the first
+export const PACKAGE_SKU_INCREMENT = 500; // added per SKU beyond the first
 
 export function getPackagePrice(skuCount: number): number {
   const clamped = Math.min(Math.max(skuCount, PACKAGE_MIN_SKUS), PACKAGE_MAX_SKUS);
