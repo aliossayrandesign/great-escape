@@ -56,12 +56,12 @@ export function PricingSection() {
           + Pricing +
         </p>
         <h2 className="mt-4 text-5xl leading-[0.95] font-semibold tracking-tight sm:text-7xl">
-          One price.
+          Clear pricing.
           <br />
           <span className="text-coral">No surprises.</span>
         </h2>
         <p className="mx-auto mt-4 max-w-md text-pretty text-paper/60">
-          Pick your product, pay once, get it built.
+          Pick your product, half now, half upon completion.
         </p>
       </div>
 
