@@ -115,8 +115,8 @@ export function ProductStep({
                       {product.title}
                     </h3>
                     <span className="shrink-0 rounded-full bg-dark-900/80 px-3 py-1 font-mono text-xs tracking-[0.1em] text-coral">
-                      {PRODUCT_PRICE_STARTS_AT[product.id] ? "From " : ""}
                       ${PRODUCT_PRICE[product.id].toLocaleString()}
+                      {PRODUCT_PRICE_STARTS_AT[product.id] ? "+" : ""}
                     </span>
                   </div>
                   <p className="mt-3 text-pretty text-sm leading-relaxed text-paper/60">
