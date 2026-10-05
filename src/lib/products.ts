@@ -1,8 +1,8 @@
 export type ProductType = "website" | "app" | "deck" | "package";
 
 export const PRODUCT_LABEL: Record<ProductType, string> = {
-  website: "Website",
-  app: "App",
+  website: "Website Design & Development",
+  app: "App Design & Build",
   deck: "Pitch Deck",
   package: "Package Design",
 };
@@ -12,10 +12,19 @@ export const PRODUCT_LABEL: Record<ProductType, string> = {
 // "package" is the base price for a single SKU — see getPackagePrice below
 // for how additional SKUs add to it.
 export const PRODUCT_PRICE: Record<ProductType, number> = {
-  website: 3500,
-  app: 7000,
-  deck: 2500,
-  package: 2000,
+  website: 4500,
+  app: 7500,
+  deck: 3000,
+  package: 3000,
+};
+
+// Products whose price can vary by scope (an app's agreed build scope, a
+// package's SKU count) are shown as "starting at" rather than a flat quote.
+export const PRODUCT_PRICE_STARTS_AT: Record<ProductType, boolean> = {
+  website: false,
+  app: true,
+  deck: false,
+  package: true,
 };
 
 export const PACKAGE_MIN_SKUS = 1;

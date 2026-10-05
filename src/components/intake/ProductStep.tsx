@@ -4,7 +4,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { PillButton } from "../ui/PillButton";
 import { GlowFog } from "../ui/GlowFog";
-import { PRODUCT_PRICE, type ProductType } from "@/lib/products";
+import { PRODUCT_PRICE, PRODUCT_PRICE_STARTS_AT, type ProductType } from "@/lib/products";
 
 export type { ProductType };
 
@@ -17,7 +17,7 @@ const PRODUCTS: {
 }[] = [
   {
     id: "website",
-    title: "Website",
+    title: "Website Design & Development",
     description: "A full site, built around your business, not a template.",
     included: [
       "Home + up to 5 core pages",
@@ -28,8 +28,8 @@ const PRODUCTS: {
   },
   {
     id: "app",
-    title: "App",
-    description: "A product interface — screens, flows, and states.",
+    title: "App Design & Build",
+    description: "UX/UI design and a functional MVP, built within an agreed scope.",
     included: [
       "Onboarding + core product flows",
       "Every state: empty, loading, error",
@@ -44,7 +44,7 @@ const PRODUCTS: {
     included: [
       "Print-ready dieline & label design",
       "Delivered as an Adobe Illustrator (.ai) file",
-      "Scales with SKUs — $600 per additional variant",
+      "Scales with SKUs — $600 per adaptation of your master design",
     ],
     image: "/images/card-package-wide.png",
   },
@@ -115,8 +115,8 @@ export function ProductStep({
                       {product.title}
                     </h3>
                     <span className="shrink-0 rounded-full bg-dark-900/80 px-3 py-1 font-mono text-xs tracking-[0.1em] text-coral">
+                      {PRODUCT_PRICE_STARTS_AT[product.id] ? "From " : ""}
                       ${PRODUCT_PRICE[product.id].toLocaleString()}
-                      {product.id === "package" ? "+" : ""}
                     </span>
                   </div>
                   <p className="mt-3 text-pretty text-sm leading-relaxed text-paper/60">

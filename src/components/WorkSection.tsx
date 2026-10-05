@@ -23,7 +23,7 @@ const PRODUCTS = [
   {
     id: "website",
     number: "01",
-    title: "Website",
+    title: "Website Design & Development",
     tagline: "A site built to convert, not just exist.",
     description:
       "Clear about what you do, confident about why it matters, easy to say yes to.",
@@ -40,10 +40,10 @@ const PRODUCTS = [
   {
     id: "app",
     number: "02",
-    title: "App",
-    tagline: "Every screen your product needs, mapped and designed.",
+    title: "App Design & Build",
+    tagline: "Every screen your product needs — designed, and built.",
     description:
-      "From first open to your core loop — onboarding, empty states, edge cases — the full experience, designed with the same care all the way through.",
+      "From first open to your core loop — onboarding, empty states, edge cases — designed in full, then built into a working MVP within an agreed scope.",
     included: [
       "Onboarding + core product flows",
       "Every state: empty, loading, error",
@@ -65,7 +65,7 @@ const PRODUCTS = [
       "Print-ready dieline & label design",
       "Delivered as a print-ready Adobe Illustrator (.ai) file",
       "Pantone/CMYK color-accurate artwork",
-      "Scales with SKUs — $600 per additional variant",
+      "Scales with SKUs — $600 per adaptation of your master design",
     ],
     image: "/images/card-package.png",
     tools: [TOOLS.ai, TOOLS.pdf],

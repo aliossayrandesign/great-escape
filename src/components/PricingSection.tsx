@@ -3,18 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { PRODUCT_PRICE } from "@/lib/products";
+import { PRODUCT_PRICE, PRODUCT_PRICE_STARTS_AT } from "@/lib/products";
 
 const PLANS = [
   {
     id: "website",
-    title: "Website",
+    title: "Website Design & Development",
     description: "A full site, built around your business, not a template.",
   },
   {
     id: "app",
-    title: "App",
-    description: "A product interface — screens, flows, and states.",
+    title: "App Design & Build",
+    description: "UX/UI design and a functional MVP, built within an agreed scope.",
   },
   {
     id: "package",
@@ -31,7 +31,7 @@ const PLANS = [
 const INCLUDED = [
   "First look in 1 week",
   "Up to 3 rounds of revisions",
-  "A real designer refines every pass",
+  "Creative-directed from first pass to final.",
 ];
 
 export function PricingSection() {
@@ -81,9 +81,15 @@ export function PricingSection() {
             <p className="mt-2 text-pretty text-sm leading-relaxed text-paper/60">
               {plan.description}
             </p>
-            <div className="mt-6 text-5xl font-semibold tracking-tight">
-              ${PRODUCT_PRICE[plan.id].toLocaleString()}
-              {plan.id === "package" ? "+" : ""}
+            <div className="mt-6">
+              {PRODUCT_PRICE_STARTS_AT[plan.id] && (
+                <p className="font-mono text-xs tracking-[0.1em] text-paper/40 uppercase">
+                  Starting at
+                </p>
+              )}
+              <div className="text-5xl font-semibold tracking-tight">
+                ${PRODUCT_PRICE[plan.id].toLocaleString()}
+              </div>
             </div>
             <div className="mt-8 flex-1 space-y-3 border-t border-paper/10 pt-7">
               {INCLUDED.map((item) => (
