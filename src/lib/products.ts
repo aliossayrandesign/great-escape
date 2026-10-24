@@ -21,7 +21,7 @@ export const PRODUCT_PRICE: Record<ProductType, number> = {
 // Products whose price can vary by scope (an app's agreed build scope, a
 // package's SKU count) are shown as "starting at" rather than a flat quote.
 export const PRODUCT_PRICE_STARTS_AT: Record<ProductType, boolean> = {
-  website: false,
+  website: true,
   app: true,
   deck: false,
   package: true,
