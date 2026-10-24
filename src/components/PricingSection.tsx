@@ -75,10 +75,10 @@ export function PricingSection() {
             transition={{ duration: 0.6, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col rounded-[28px] border border-panel-stroke bg-dark-950/75 p-8 backdrop-blur-md"
           >
-            <h3 className="text-balance text-2xl font-semibold tracking-tight">
+            <h3 className="min-h-16 text-balance text-2xl font-semibold tracking-tight">
               {plan.title}
             </h3>
-            <p className="mt-2 text-pretty text-sm leading-relaxed text-paper/60">
+            <p className="mt-2 min-h-12 text-pretty text-sm leading-relaxed text-paper/60">
               {plan.description}
             </p>
             <div className="mt-6 text-5xl font-semibold tracking-tight">
@@ -98,7 +98,7 @@ export function PricingSection() {
                 </div>
               ))}
             </div>
-            <div className="mt-9">
+            <div className="mt-9 flex justify-center">
               <Link
                 href={`/start?product=${plan.id}`}
                 className="inline-block transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
