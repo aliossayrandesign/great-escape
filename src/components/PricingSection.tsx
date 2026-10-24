@@ -83,7 +83,9 @@ export function PricingSection() {
             </p>
             <div className="mt-6 text-5xl font-semibold tracking-tight">
               ${PRODUCT_PRICE[plan.id].toLocaleString()}
-              {PRODUCT_PRICE_STARTS_AT[plan.id] ? "+" : ""}
+              {PRODUCT_PRICE_STARTS_AT[plan.id] && (
+                <span className="ml-1 align-top text-2xl text-coral">+</span>
+              )}
             </div>
             <div className="mt-8 flex-1 space-y-3 border-t border-paper/10 pt-7">
               {INCLUDED.map((item) => (
